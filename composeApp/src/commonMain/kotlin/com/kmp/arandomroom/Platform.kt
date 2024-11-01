@@ -1,4 +1,4 @@
-package com.kmp.coachme
+package com.kmp.arandomroom
 
 interface Platform {
     val name: String

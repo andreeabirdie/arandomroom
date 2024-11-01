@@ -1,25 +1,25 @@
-package com.kmp.coachme.ui.theme
+package com.kmp.arandomroom.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import coachme.composeapp.generated.resources.Res
-import coachme.composeapp.generated.resources.redhatdisplay_black
-import coachme.composeapp.generated.resources.redhatdisplay_blackitalic
-import coachme.composeapp.generated.resources.redhatdisplay_bold
-import coachme.composeapp.generated.resources.redhatdisplay_bolditalic
-import coachme.composeapp.generated.resources.redhatdisplay_extrabold
-import coachme.composeapp.generated.resources.redhatdisplay_extrabolditalic
-import coachme.composeapp.generated.resources.redhatdisplay_italic
-import coachme.composeapp.generated.resources.redhatdisplay_light
-import coachme.composeapp.generated.resources.redhatdisplay_lightitalic
-import coachme.composeapp.generated.resources.redhatdisplay_medium
-import coachme.composeapp.generated.resources.redhatdisplay_mediumitalic
-import coachme.composeapp.generated.resources.redhatdisplay_regular
-import coachme.composeapp.generated.resources.redhatdisplay_semibold
-import coachme.composeapp.generated.resources.redhatdisplay_semibolditalic
+import arandomroom.composeapp.generated.resources.Res
+import arandomroom.composeapp.generated.resources.redhatdisplay_black
+import arandomroom.composeapp.generated.resources.redhatdisplay_blackitalic
+import arandomroom.composeapp.generated.resources.redhatdisplay_bold
+import arandomroom.composeapp.generated.resources.redhatdisplay_bolditalic
+import arandomroom.composeapp.generated.resources.redhatdisplay_extrabold
+import arandomroom.composeapp.generated.resources.redhatdisplay_extrabolditalic
+import arandomroom.composeapp.generated.resources.redhatdisplay_italic
+import arandomroom.composeapp.generated.resources.redhatdisplay_light
+import arandomroom.composeapp.generated.resources.redhatdisplay_lightitalic
+import arandomroom.composeapp.generated.resources.redhatdisplay_medium
+import arandomroom.composeapp.generated.resources.redhatdisplay_mediumitalic
+import arandomroom.composeapp.generated.resources.redhatdisplay_regular
+import arandomroom.composeapp.generated.resources.redhatdisplay_semibold
+import arandomroom.composeapp.generated.resources.redhatdisplay_semibolditalic
 import org.jetbrains.compose.resources.Font
 
 val baseline = Typography()

@@ -28,4 +28,5 @@ dependencyResolutionManagement {
     }
 }
 
+rootProject.name="arandomroom"
 include(":composeApp")

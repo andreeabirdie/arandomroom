@@ -1,4 +1,4 @@
-package com.kmp.coachme
+package com.kmp.arandomroom
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-import coachme.composeapp.generated.resources.Res
-import coachme.composeapp.generated.resources.compose_multiplatform
-import com.kmp.coachme.ui.theme.AppTheme
+import arandomroom.composeapp.generated.resources.Res
+import arandomroom.composeapp.generated.resources.compose_multiplatform
+import com.kmp.arandomroom.ui.theme.AppTheme
 
 @Composable
 @Preview

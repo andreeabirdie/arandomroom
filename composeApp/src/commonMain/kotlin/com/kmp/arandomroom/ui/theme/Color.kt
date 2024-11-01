@@ -1,4 +1,4 @@
-package com.kmp.coachme.ui.theme
+package com.kmp.arandomroom.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF3A608F)
