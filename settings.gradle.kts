@@ -1,4 +1,4 @@
-rootProject.name = "coachme"
+rootProject.name = "arandomroom"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
@@ -28,5 +28,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name="arandomroom"
 include(":composeApp")
