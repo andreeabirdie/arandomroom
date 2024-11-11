@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.game.composables
+package com.kmp.arandomroom.ui.screens.room.composables
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape

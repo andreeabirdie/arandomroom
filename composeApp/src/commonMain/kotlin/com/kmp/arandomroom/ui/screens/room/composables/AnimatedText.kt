@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.game.composables
+package com.kmp.arandomroom.ui.screens.room.composables
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

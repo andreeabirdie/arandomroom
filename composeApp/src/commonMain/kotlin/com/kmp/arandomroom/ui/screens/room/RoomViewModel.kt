@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.game
+package com.kmp.arandomroom.ui.screens.room
 
 import com.kmp.arandomroom.BuildKonfig
 import com.kmp.arandomroom.data.model.Action
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 
-class GameViewModel : ViewModel() {
+class RoomViewModel : ViewModel() {
     val key = Item(
         id = "key1",
         name = "Rusty Key",

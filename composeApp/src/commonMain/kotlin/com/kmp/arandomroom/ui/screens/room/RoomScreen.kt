@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.game
+package com.kmp.arandomroom.ui.screens.room
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.icon_send
 import com.kmp.arandomroom.data.model.GameState
-import com.kmp.arandomroom.ui.screens.game.composables.AnimatedText
-import com.kmp.arandomroom.ui.screens.game.composables.PromptTextField
+import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
+import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
