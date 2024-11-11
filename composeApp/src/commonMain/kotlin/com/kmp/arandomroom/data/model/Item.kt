@@ -3,4 +3,8 @@ package com.kmp.arandomroom.data.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Content(val parts: List<Part>)
+data class Item (
+    val id: String,
+    val name: String,
+    val description: String
+)

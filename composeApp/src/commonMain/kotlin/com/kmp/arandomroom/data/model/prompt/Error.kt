@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.data.model
+package com.kmp.arandomroom.data.model.prompt
 
 import kotlinx.serialization.Serializable
 
