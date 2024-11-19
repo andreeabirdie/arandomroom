@@ -1,0 +1,13 @@
+<resources>
+    <string name="reply_format_rule">Reply only with the json.</string>
+    <string name="object_structure_rule">Respect the given json keys.</string>
+    <string name="start_end_parameters_rule">Make sure to set the currentRoom and endRoom ids.</string>
+    <string name="action_description_rule">Make sure that the directions in which the user can move and the items in the room are mentioned in the description</string>
+    <string name="enforce_interactable_objects_rule">Make sure that objects that can be interacted with are added as interactableObjects and mentioned in the description.</string>
+    <string name="end_room_rule">Only add description to the last room as it ends the game</string>
+    <string name="generate_game_prompt">Generate a %1$s themed game with the following structure.</string>
+    <string name="invalid_action_feedback">You can't do that.</string>
+    <string name="empty_rule">Add empty lists values in the json instead of omitting keys for list keys.</string>
+    <string name="using_items_rule">For an item to be used it has to exist in inventory.</string>
+    <string name="validate_action_prompt">Given the current room's actions: %1$s and the command: '%2$s', indicate if the command corresponds to a valid action and give feedback using this structure %3$s</string>
+</resources>

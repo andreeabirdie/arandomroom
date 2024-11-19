@@ -18,30 +18,42 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.icon_send
 import com.kmp.arandomroom.data.model.GameState
+import com.kmp.arandomroom.ui.screens.menu.MenuViewModel
 import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
+import dev.icerock.moko.mvvm.compose.getViewModel
+import dev.icerock.moko.mvvm.compose.viewModelFactory
 import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun RoomScreen(
-    gameState: GameState,
-    onAction: (String) -> Unit
+    initialGameState: GameState,
+    onEndGame: () -> Unit,
+    onExitGame: () -> Unit,
+    viewModel: RoomViewModel = getViewModel(Unit, viewModelFactory { RoomViewModel() })
 ) {
+    viewModel.setInitialGameState(initialGameState)
+    val gameState = viewModel.uiState.collectAsState()
+
     val prompt = remember { mutableStateOf("") }
-    val currentRoom = gameState.rooms.first { it.id == gameState.currentRoom }
     val animationOngoing = remember { mutableStateOf(true) }
 
-    if (currentRoom.id == gameState.endRoom) {
-        // todo: end game
+    if (gameState.value.currentRoom == gameState.value.endRoom) {
+        println("qwerty current room ${gameState.value.currentRoom} end room ${gameState.value.endRoom}")
+        onEndGame()
     }
+
+    val currentRoom = gameState.value.rooms.first { it.id == gameState.value.currentRoom }
 
     Column(
         Modifier
@@ -59,7 +71,7 @@ fun RoomScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "You are in ${currentRoom.name}",
+                text = currentRoom.name,
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(modifier = Modifier.height(30.dp))
@@ -72,7 +84,7 @@ fun RoomScreen(
 
         Column {
             AnimatedText(
-                gameState.actionFeedback,
+                gameState.value.actionFeedback,
                 style = MaterialTheme.typography.titleSmall,
                 animationOngoing = mutableStateOf(false)
             )
@@ -91,7 +103,7 @@ fun RoomScreen(
                     IconButton(
                         modifier = Modifier.padding(8.dp),
                         onClick = {
-                            onAction(prompt.value.lowercase())
+                            viewModel.onAction(prompt.value.lowercase())
                             prompt.value = ""
                         }
                     ) {

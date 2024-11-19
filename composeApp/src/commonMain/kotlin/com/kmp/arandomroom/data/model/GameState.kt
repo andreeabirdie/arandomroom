@@ -8,5 +8,17 @@ data class GameState(
     val endRoom: String,
     val rooms: List<Room>,
     val actionFeedback: String,
-    val inventory: List<Item>
-)
+    val inventory: List<String>
+) {
+     companion object {
+         fun getDefaultGameState() : GameState {
+             return GameState(
+                 currentRoom = "",
+                 endRoom = "",
+                 rooms = listOf(Room.getDefaultRoom()),
+                 actionFeedback = "",
+                 inventory = emptyList()
+             )
+         }
+     }
+}

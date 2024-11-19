@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.moko.mvvm.core)
             implementation(libs.moko.mvvm.compose)
+            implementation(libs.navigation.compose)
         }
     }
 }
