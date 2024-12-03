@@ -24,11 +24,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.icon_send
 import com.kmp.arandomroom.data.model.GameState
-import com.kmp.arandomroom.ui.screens.menu.MenuViewModel
 import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
 import dev.icerock.moko.mvvm.compose.getViewModel
@@ -49,7 +47,6 @@ fun RoomScreen(
     val animationOngoing = remember { mutableStateOf(true) }
 
     if (gameState.value.currentRoom == gameState.value.endRoom) {
-        println("qwerty current room ${gameState.value.currentRoom} end room ${gameState.value.endRoom}")
         onEndGame()
     }
 

@@ -3,14 +3,13 @@ package com.kmp.arandomroom.ui.screens.room
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.invalid_action_feedback
 import arandomroom.composeapp.generated.resources.validate_action_prompt
-import arandomroom.composeapp.generated.resources.object_structure_rule
-import arandomroom.composeapp.generated.resources.reply_format_rule
-import arandomroom.composeapp.generated.resources.empty_rule
 import arandomroom.composeapp.generated.resources.using_items_rule
 import com.kmp.arandomroom.data.model.Action
+import com.kmp.arandomroom.data.model.Action.Companion.getActionType
+import com.kmp.arandomroom.data.model.ActionType
 import com.kmp.arandomroom.data.model.GameState
 import com.kmp.arandomroom.data.model.ValidatedAction
-import com.kmp.arandomroom.domain.GenerateContentUseCase
+import com.kmp.arandomroom.domain.GenerationUseCase
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +18,7 @@ import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 
 class RoomViewModel(
-    private val generateContentUseCase: GenerateContentUseCase = GenerateContentUseCase()
+    private val generationUseCase: GenerationUseCase = GenerationUseCase(ValidatedAction.getSchema())
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameState.getDefaultGameState())
@@ -30,55 +29,31 @@ class RoomViewModel(
     }
 
     fun onAction(action: String) {
+        val validActions = _uiState.value.rooms.first { room ->
+            room.id == _uiState.value.currentRoom
+        }.actions.joinToString(
+            ", "
+        ) {
+            Json.encodeToString(Action.serializer(), it)
+        }
+
         viewModelScope.launch {
-            var validResponse = false
-
-            val validActions =
-                _uiState.value.rooms.first { room ->
-                    room.id == _uiState.value.currentRoom
-                }.actions.joinToString(
-                    ", "
-                ) {
-                    Json.encodeToString(Action.serializer(), it)
-                }
-
             var prompt = getString(
                 Res.string.validate_action_prompt,
                 validActions,
-                action,
-                Json.encodeToString(
-                    ValidatedAction.serializer(),
-                    ValidatedAction.getDefaultValidatedAction()
-                )
+                action
             )
             prompt = addRules(prompt)
-
-            while (!validResponse) {
-                println("qwerty $prompt")
-                val response = generateContentUseCase.generateContent(prompt)
-                val validAction = response.candidates?.get(0)?.content?.parts?.get(0)?.text
-                println("qwerty reply $validAction")
-                if (validAction != null) {
-                    try {
-                        val validatedAction = Json.decodeFromString<ValidatedAction>(validAction)
-                        validResponse = true
-                        performAction(validatedAction)
-                    } catch (e: Exception) {
-                        println("qwerty error e")
-                    }
-                }
+            val response = generationUseCase.generateResponse(prompt)
+            if (response != null) {
+                val validatedAction = Json.decodeFromString<ValidatedAction>(response)
+                performAction(validatedAction)
             }
         }
     }
 
     private suspend fun addRules(prompt: String): String {
         return "$prompt Rules: ${
-            getString(Res.string.object_structure_rule)
-        }\n${
-            getString(Res.string.reply_format_rule)
-        }\n${
-            getString(Res.string.empty_rule)
-        }\n${
             getString(Res.string.using_items_rule)
         }"
     }
@@ -88,22 +63,22 @@ class RoomViewModel(
             getString(Res.string.invalid_action_feedback)
         }
 
-        _uiState.value = when (validatedAction.action) {
-            is Action.Move -> _uiState.value.copy(
-                currentRoom = validatedAction.action.roomId,
+        _uiState.value = when (validatedAction.action?.getActionType()) {
+            ActionType.MOVE -> _uiState.value.copy(
+                currentRoom = validatedAction.action.roomId ?: _uiState.value.currentRoom,
                 actionFeedback = feedback
             )
 
-            is Action.PickUp -> _uiState.value.copy(
+            ActionType.PICK_UP -> _uiState.value.copy(
                 actionFeedback = feedback,
-                inventory = _uiState.value.inventory + validatedAction.action.itemId
+                inventory = if (validatedAction.action.itemId == null) {
+                    _uiState.value.inventory
+                } else {
+                    _uiState.value.inventory + validatedAction.action.itemId
+                }
             )
 
             else -> _uiState.value.copy(actionFeedback = feedback)
         }
-    }
-
-    override fun onCleared() {
-        generateContentUseCase.onCleared()
     }
 }

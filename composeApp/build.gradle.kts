@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.moko.mvvm.core)
             implementation(libs.moko.mvvm.compose)
             implementation(libs.navigation.compose)
+            implementation(libs.generativeai)
         }
     }
 }

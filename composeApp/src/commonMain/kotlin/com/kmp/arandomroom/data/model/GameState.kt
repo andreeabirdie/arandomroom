@@ -15,7 +15,7 @@ data class GameState(
              return GameState(
                  currentRoom = "",
                  endRoom = "",
-                 rooms = listOf(Room.getDefaultRoom()),
+                 rooms = emptyList(),
                  actionFeedback = "",
                  inventory = emptyList()
              )

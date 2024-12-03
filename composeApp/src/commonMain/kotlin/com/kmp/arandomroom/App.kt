@@ -41,13 +41,11 @@ fun App() {
                 composable(route = RandomRoomScreen.Menu.route) {
                     MenuScreen(
                         onStartGame = { gameState ->
-                            println("qwerty onStart $gameState")
                             initialGameState = gameState
                             navController.navigate(RandomRoomScreen.Room.route) }
                     )
                 }
                 composable(route = RandomRoomScreen.Room.route) {
-                    println("qwerty creating room screen $initialGameState")
                     initialGameState?.let { gameState ->
                         RoomScreen(
                             initialGameState = gameState,
@@ -57,7 +55,6 @@ fun App() {
                     }
                 }
                 composable(route = RandomRoomScreen.Final.route) {
-                    println("qwerty creating end screen")
                     FinalScreen(
                         onExitGame = { navController.navigate(RandomRoomScreen.Menu.route) }
                     )
