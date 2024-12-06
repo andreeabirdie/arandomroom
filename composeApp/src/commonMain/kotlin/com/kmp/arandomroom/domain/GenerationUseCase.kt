@@ -1,15 +1,17 @@
 package com.kmp.arandomroom.domain
 
 import com.kmp.arandomroom.BuildKonfig
+import com.kmp.arandomroom.data.model.ValidatedAction
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import dev.shreyaspatil.ai.client.generativeai.type.content
 import dev.shreyaspatil.ai.client.generativeai.type.generationConfig
 import kotlinx.serialization.json.JsonObject
+import org.koin.core.component.KoinComponent
 
 class GenerationUseCase(
     schema: Schema<JsonObject>
-) {
+) : KoinComponent {
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-1.5-pro",
@@ -20,9 +22,16 @@ class GenerationUseCase(
         }
     )
 
-    suspend fun generateResponse(prompt: String): String? {
+    suspend fun generateResponse(prompt: String, errorResponse: String?): String? {
         val inputContent = content { text(prompt) }
 
-        return generativeModel.generateContent(inputContent).text
+        return try {
+            val response = generativeModel.generateContent(inputContent).text
+            response
+        } catch (e: Exception) {
+            println("qwerty $e")
+            errorResponse
+        }
+
     }
 }

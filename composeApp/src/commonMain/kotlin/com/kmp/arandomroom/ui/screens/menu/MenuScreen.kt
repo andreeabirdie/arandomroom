@@ -20,13 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kmp.arandomroom.data.model.GameState
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
-import dev.icerock.moko.mvvm.compose.getViewModel
-import dev.icerock.moko.mvvm.compose.viewModelFactory
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MenuScreen(
     onStartGame: (GameState?) -> Unit,
-    viewModel: MenuViewModel = getViewModel(Unit, viewModelFactory { MenuViewModel() })
+    viewModel: MenuViewModel = koinViewModel<MenuViewModel>()
 ) {
     val prompt = remember { mutableStateOf("") }
     val generatedGameState = viewModel.uiState.collectAsState()

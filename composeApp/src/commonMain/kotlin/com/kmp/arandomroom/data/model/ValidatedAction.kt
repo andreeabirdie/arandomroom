@@ -35,5 +35,9 @@ data class ValidatedAction(
                 required = listOf("action", "actionFeedback")
             )
         }
+
+        fun getErrorMessage() : ValidatedAction {
+            return ValidatedAction(null, "Something went wrong. Please try again.")
+        }
     }
 }

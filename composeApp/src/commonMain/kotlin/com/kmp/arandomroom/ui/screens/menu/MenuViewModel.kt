@@ -1,23 +1,26 @@
 package com.kmp.arandomroom.ui.screens.menu
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.action_description_rule
 import arandomroom.composeapp.generated.resources.enforce_interactable_objects_rule
+import arandomroom.composeapp.generated.resources.enforce_items_rule
 import arandomroom.composeapp.generated.resources.generate_game_prompt
 import arandomroom.composeapp.generated.resources.start_end_parameters_rule
 import arandomroom.composeapp.generated.resources.describing_future_room
 import com.kmp.arandomroom.data.model.GeneratedGame
 import com.kmp.arandomroom.domain.GenerationUseCase
-import dev.icerock.moko.mvvm.viewmodel.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
+import org.koin.core.component.KoinComponent
 
 class MenuViewModel(
-    private val generationUseCase: GenerationUseCase = GenerationUseCase(GeneratedGame.getSchema())
-) : ViewModel() {
+    private val generationUseCase: GenerationUseCase
+) : ViewModel(), KoinComponent {
 
     private val _uiState = MutableStateFlow<GeneratedGame?>(null)
     val uiState = _uiState.asStateFlow()
@@ -27,7 +30,7 @@ class MenuViewModel(
             var prompt = getString(Res.string.generate_game_prompt, theme)
             prompt = addRules(prompt)
 
-            val response = generationUseCase.generateResponse(prompt)
+            val response = generationUseCase.generateResponse(prompt, null)
             if (response != null) {
                 _uiState.value = Json.decodeFromString<GeneratedGame>(response)
             }
@@ -39,6 +42,8 @@ class MenuViewModel(
             getString(Res.string.start_end_parameters_rule)
         } ${
             getString(Res.string.enforce_interactable_objects_rule)
+        } ${
+            getString(Res.string.enforce_items_rule)
         } ${
             getString(Res.string.describing_future_room)
         } ${

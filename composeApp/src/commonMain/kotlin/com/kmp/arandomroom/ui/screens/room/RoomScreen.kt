@@ -29,18 +29,17 @@ import arandomroom.composeapp.generated.resources.icon_send
 import com.kmp.arandomroom.data.model.GameState
 import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
-import dev.icerock.moko.mvvm.compose.getViewModel
-import dev.icerock.moko.mvvm.compose.viewModelFactory
 import org.jetbrains.compose.resources.vectorResource
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RoomScreen(
     initialGameState: GameState,
     onEndGame: () -> Unit,
     onExitGame: () -> Unit,
-    viewModel: RoomViewModel = getViewModel(Unit, viewModelFactory { RoomViewModel() })
+    viewModel: RoomViewModel = koinViewModel<RoomViewModel> { parametersOf(initialGameState) }
 ) {
-    viewModel.setInitialGameState(initialGameState)
     val gameState = viewModel.uiState.collectAsState()
 
     val prompt = remember { mutableStateOf("") }
@@ -50,6 +49,7 @@ fun RoomScreen(
         onEndGame()
     }
 
+    println("qwerty ${gameState.value.currentRoom}")
     val currentRoom = gameState.value.rooms.first { it.id == gameState.value.currentRoom }
 
     Column(
@@ -100,7 +100,7 @@ fun RoomScreen(
                     IconButton(
                         modifier = Modifier.padding(8.dp),
                         onClick = {
-                            viewModel.onAction(prompt.value.lowercase())
+                            viewModel.onAction(currentRoom, prompt.value.lowercase())
                             prompt.value = ""
                         }
                     ) {

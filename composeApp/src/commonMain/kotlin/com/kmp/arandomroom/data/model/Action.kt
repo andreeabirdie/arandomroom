@@ -28,7 +28,7 @@ data class Action(
                 properties = mapOf(
                     "type" to Schema(
                         name = "type",
-                        description = "Type of action the user can perform",
+                        description = "Type of action the user can perform. Move is used when navigating to a different room, PickUp is used when picking up an item from the room, Use is used when using an item from the inventory, Open is used when opening an object in the room",
                         type = FunctionType.STRING,
                         enum = listOf("Move", "PickUp", "Use", "Open"),
                         nullable = false
