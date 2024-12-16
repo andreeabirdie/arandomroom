@@ -1,20 +1,22 @@
-package com.kmp.arandomroom.data.model
+package com.kmp.arandomroom.domain.model
 
+import com.kmp.arandomroom.data.model.ActionDMO
+import com.kmp.arandomroom.data.model.ActionType
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionType
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class Action(
+data class ActionDTO(
     val type: String,
     val direction: String?,
-    val roomId: String?,
+    val roomDestinationId: String?,
     val itemId: String?,
     val objectId: String?
 ) {
     companion object {
-        fun Action.getActionType(): ActionType? {
+        fun ActionDTO.getActionType(): ActionType? {
             return ActionType.entries.find { actionType ->
                 actionType.name.equals(type, ignoreCase = true)
             }
@@ -39,8 +41,8 @@ data class Action(
                         type = FunctionType.STRING,
                         nullable = true
                     ),
-                    "roomId" to Schema(
-                        name = "roomId",
+                    "roomDestinationId" to Schema(
+                        name = "roomDestinationId",
                         description = "Room ID to move to (only for Move action), null otherwise",
                         type = FunctionType.STRING,
                         nullable = true
@@ -58,7 +60,22 @@ data class Action(
                         nullable = true
                     )
                 ),
-                required = listOf("type", "direction", "roomId", "itemId", "objectId")
+                required = listOf("type", "direction", "roomDestinationId", "itemId", "objectId")
+            )
+        }
+
+        fun ActionDTO.toDMO(
+            gameId: String,
+            roomId: String
+        ): ActionDMO {
+            return ActionDMO(
+                gameId = gameId,
+                roomId = roomId,
+                type = type,
+                direction = direction,
+                roomDestinationId = roomDestinationId,
+                itemId = itemId,
+                objectId = objectId
             )
         }
     }

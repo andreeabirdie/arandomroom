@@ -1,12 +1,13 @@
-package com.kmp.arandomroom.data.model
+package com.kmp.arandomroom.domain.model
 
+import com.kmp.arandomroom.data.model.InteractableObjectDMO
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionType
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class InteractableObject(
+data class InteractableObjectDTO(
     val id: String,
     val name: String,
     val description: String,
@@ -45,6 +46,20 @@ data class InteractableObject(
                     )
                 ),
                 required = listOf("id", "name", "description", "requiredItem")
+            )
+        }
+
+        fun InteractableObjectDTO.toDMO(
+            gameId: String,
+            roomId: String
+        ) : InteractableObjectDMO {
+            return InteractableObjectDMO(
+                id = id,
+                gameId = gameId,
+                roomId = roomId,
+                name = name,
+                description = description,
+                requiredItem = requiredItem
             )
         }
     }

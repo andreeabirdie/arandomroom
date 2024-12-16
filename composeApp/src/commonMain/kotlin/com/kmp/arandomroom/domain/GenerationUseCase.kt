@@ -1,7 +1,6 @@
 package com.kmp.arandomroom.domain
 
 import com.kmp.arandomroom.BuildKonfig
-import com.kmp.arandomroom.data.model.ValidatedAction
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import dev.shreyaspatil.ai.client.generativeai.type.content

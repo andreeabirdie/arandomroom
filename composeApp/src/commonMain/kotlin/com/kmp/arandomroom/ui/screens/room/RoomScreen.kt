@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.icon_send
-import com.kmp.arandomroom.data.model.GameState
+import com.kmp.arandomroom.domain.model.GameStateDTO
 import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
 import org.jetbrains.compose.resources.vectorResource
@@ -35,80 +35,80 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun RoomScreen(
-    initialGameState: GameState,
+    gameId: String,
     onEndGame: () -> Unit,
     onExitGame: () -> Unit,
-    viewModel: RoomViewModel = koinViewModel<RoomViewModel> { parametersOf(initialGameState) }
+    viewModel: RoomViewModel = koinViewModel<RoomViewModel> { parametersOf(gameId) }
 ) {
     val gameState = viewModel.uiState.collectAsState()
 
-    val prompt = remember { mutableStateOf("") }
-    val animationOngoing = remember { mutableStateOf(true) }
+    //todo: show loading instead of current solution while the game state is being initialzied
+    gameState.value.rooms.firstOrNull { it.id == gameState.value.currentRoom }?.let { currentRoom ->
+        val prompt = remember { mutableStateOf("") }
+        val animationOngoing = remember { mutableStateOf(true) }
 
-    if (gameState.value.currentRoom == gameState.value.endRoom) {
-        onEndGame()
-    }
-
-    println("qwerty ${gameState.value.currentRoom}")
-    val currentRoom = gameState.value.rooms.first { it.id == gameState.value.currentRoom }
-
-    Column(
-        Modifier
-            .padding(16.dp)
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = currentRoom.name,
-                style = MaterialTheme.typography.titleSmall
-            )
-            Spacer(modifier = Modifier.height(30.dp))
-            AnimatedText(
-                text = currentRoom.description,
-                style = MaterialTheme.typography.titleMedium,
-                animationOngoing = animationOngoing
-            )
+        if (gameState.value.currentRoom == gameState.value.endRoom) {
+            onEndGame()
         }
 
-        Column {
-            AnimatedText(
-                gameState.value.actionFeedback,
-                style = MaterialTheme.typography.titleSmall,
-                animationOngoing = mutableStateOf(false)
-            )
-            Spacer(modifier = Modifier.height(30.dp))
-            Row {
-                PromptTextField(
-                    isEnabled = !animationOngoing.value,
-                    inputText = prompt,
-                    modifier = Modifier
-                        .background(color = MaterialTheme.colorScheme.surfaceDim)
-                        .padding(top = 8.dp)
-                        .weight(1f)
+        Column(
+            Modifier
+                .padding(16.dp)
+                .fillMaxSize()
+                .windowInsetsPadding(WindowInsets.safeDrawing),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = currentRoom.name,
+                    style = MaterialTheme.typography.titleSmall
                 )
+                Spacer(modifier = Modifier.height(30.dp))
+                AnimatedText(
+                    text = currentRoom.description,
+                    style = MaterialTheme.typography.titleMedium,
+                    animationOngoing = animationOngoing
+                )
+            }
 
-                AnimatedVisibility(visible = prompt.value.isNotEmpty()) {
-                    IconButton(
-                        modifier = Modifier.padding(8.dp),
-                        onClick = {
-                            viewModel.onAction(currentRoom, prompt.value.lowercase())
-                            prompt.value = ""
+            Column {
+                AnimatedText(
+                    gameState.value.actionFeedback,
+                    style = MaterialTheme.typography.titleSmall,
+                    animationOngoing = mutableStateOf(false)
+                )
+                Spacer(modifier = Modifier.height(30.dp))
+                Row {
+                    PromptTextField(
+                        isEnabled = !animationOngoing.value,
+                        inputText = prompt,
+                        modifier = Modifier
+                            .background(color = MaterialTheme.colorScheme.surfaceDim)
+                            .padding(top = 8.dp)
+                            .weight(1f)
+                    )
+
+                    AnimatedVisibility(visible = prompt.value.isNotEmpty()) {
+                        IconButton(
+                            modifier = Modifier.padding(8.dp),
+                            onClick = {
+                                viewModel.onAction(currentRoom, prompt.value.lowercase())
+                                prompt.value = ""
+                            }
+                        ) {
+                            Icon(
+                                tint = MaterialTheme.colorScheme.primary,
+                                imageVector = vectorResource(Res.drawable.icon_send),
+                                contentDescription = "Send"
+                            )
                         }
-                    ) {
-                        Icon(
-                            tint = MaterialTheme.colorScheme.primary,
-                            imageVector = vectorResource(Res.drawable.icon_send),
-                            contentDescription = "Send"
-                        )
                     }
                 }
             }

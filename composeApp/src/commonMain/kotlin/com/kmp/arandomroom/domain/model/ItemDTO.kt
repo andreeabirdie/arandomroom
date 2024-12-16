@@ -1,18 +1,19 @@
-package com.kmp.arandomroom.data.model
+package com.kmp.arandomroom.domain.model
 
+import com.kmp.arandomroom.data.model.ItemDMO
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionType
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class Item (
+data class ItemDTO(
     val id: String = "",
     val name: String = "",
     val description: String = ""
 ) {
     companion object {
-        fun getSchema() : Schema<JsonObject> {
+        fun getSchema(): Schema<JsonObject> {
             return Schema(
                 name = "item",
                 description = "An item in the game",
@@ -38,6 +39,21 @@ data class Item (
                     )
                 ),
                 required = listOf("id", "name", "description")
+            )
+        }
+
+        fun ItemDTO.toDMO(
+            gameId: String,
+            roomId: String,
+            isInInventory: Boolean
+        ): ItemDMO {
+            return ItemDMO(
+                id = id,
+                gameId = gameId,
+                roomId = roomId,
+                name = name,
+                description = description,
+                isInInventory = isInInventory,
             )
         }
     }

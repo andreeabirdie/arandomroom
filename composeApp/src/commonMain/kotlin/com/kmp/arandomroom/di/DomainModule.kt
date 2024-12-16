@@ -1,9 +1,12 @@
 package com.kmp.arandomroom.di
 
-import com.kmp.arandomroom.data.model.GeneratedGame
-import com.kmp.arandomroom.data.model.ValidatedAction
+import com.kmp.arandomroom.domain.GameManagementUseCase
+import com.kmp.arandomroom.domain.model.GeneratedGame
+import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.domain.GenerationUseCase
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val domainModule = module {
@@ -14,4 +17,6 @@ val domainModule = module {
     single<GenerationUseCase>(named("MenuGenerationUseCase")) {
         GenerationUseCase(GeneratedGame.getSchema())
     }
+
+    singleOf(::GameManagementUseCase).bind(GameManagementUseCase::class)
 }

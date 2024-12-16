@@ -18,29 +18,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.kmp.arandomroom.data.model.GameState
+import com.kmp.arandomroom.domain.model.GameStateDTO
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
 import org.koin.compose.viewmodel.koinViewModel
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun MenuScreen(
-    onStartGame: (GameState?) -> Unit,
+    onStartGame: (String) -> Unit,
     viewModel: MenuViewModel = koinViewModel<MenuViewModel>()
 ) {
     val prompt = remember { mutableStateOf("") }
-    val generatedGameState = viewModel.uiState.collectAsState()
+    val generatedGameId = viewModel.uiState.collectAsState()
     val isLoading = remember { mutableStateOf(false) }
 
-    generatedGameState.value?.let { gameStateDTO ->
-        onStartGame(
-            GameState(
-                currentRoom = gameStateDTO.currentRoom,
-                endRoom = gameStateDTO.endRoom,
-                rooms = gameStateDTO.rooms,
-                actionFeedback = "",
-                inventory = emptyList()
-            )
-        )
+    generatedGameId.value?.let { gameId ->
+        onStartGame(gameId)
         isLoading.value = false
     }
 

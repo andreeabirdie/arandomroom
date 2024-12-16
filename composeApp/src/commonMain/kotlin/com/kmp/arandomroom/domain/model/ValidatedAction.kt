@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.data.model
+package com.kmp.arandomroom.domain.model
 
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionType
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
@@ -7,7 +7,7 @@ import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class ValidatedAction(
-    val action: Action?,
+    val action: ActionDTO?,
     val actionFeedback: String
 ) {
     companion object {
@@ -21,8 +21,8 @@ data class ValidatedAction(
                         name = "action",
                         description = "Action object if valid action was provided, null otherwise",
                         type = FunctionType.OBJECT,
-                        properties = Action.getSchema().properties,
-                        required = Action.getSchema().required,
+                        properties = ActionDTO.getSchema().properties,
+                        required = ActionDTO.getSchema().required,
                         nullable = true
                     ),
                     "actionFeedback" to Schema(

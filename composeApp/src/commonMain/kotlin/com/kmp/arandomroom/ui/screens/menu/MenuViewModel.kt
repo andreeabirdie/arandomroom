@@ -9,22 +9,28 @@ import arandomroom.composeapp.generated.resources.enforce_items_rule
 import arandomroom.composeapp.generated.resources.generate_game_prompt
 import arandomroom.composeapp.generated.resources.start_end_parameters_rule
 import arandomroom.composeapp.generated.resources.describing_future_room
-import com.kmp.arandomroom.data.model.GeneratedGame
+import com.kmp.arandomroom.domain.GameManagementUseCase
+import com.kmp.arandomroom.domain.model.GeneratedGame
 import com.kmp.arandomroom.domain.GenerationUseCase
+import com.kmp.arandomroom.domain.model.GameStateDTO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import org.koin.core.component.KoinComponent
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class MenuViewModel(
-    private val generationUseCase: GenerationUseCase
+    private val generationUseCase: GenerationUseCase,
+    private val gameManagementUseCase: GameManagementUseCase
 ) : ViewModel(), KoinComponent {
 
-    private val _uiState = MutableStateFlow<GeneratedGame?>(null)
+    private val _uiState = MutableStateFlow<String?>(null)
     val uiState = _uiState.asStateFlow()
 
+    @OptIn(ExperimentalUuidApi::class)
     fun generateGame(theme: String) {
         viewModelScope.launch {
             var prompt = getString(Res.string.generate_game_prompt, theme)
@@ -32,7 +38,18 @@ class MenuViewModel(
 
             val response = generationUseCase.generateResponse(prompt, null)
             if (response != null) {
-                _uiState.value = Json.decodeFromString<GeneratedGame>(response)
+                val generatedGame = Json.decodeFromString(GeneratedGame.serializer(), response)
+                val gameId = Uuid.random().toString()
+                gameManagementUseCase.insertGame(GameStateDTO(
+                    gameId = gameId,
+                    title = generatedGame.title,
+                    currentRoom = generatedGame.currentRoom,
+                    endRoom = generatedGame.endRoom,
+                    rooms = generatedGame.rooms,
+                    actionFeedback = "",
+                    inventory = emptyList()
+                ))
+                _uiState.value = gameId
             }
         }
     }

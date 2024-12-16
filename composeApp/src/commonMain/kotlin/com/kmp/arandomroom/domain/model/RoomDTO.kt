@@ -1,18 +1,20 @@
-package com.kmp.arandomroom.data.model
+package com.kmp.arandomroom.domain.model
 
+import com.kmp.arandomroom.data.model.RoomDMO
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionType
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class Room(
+data class RoomDTO(
     val id: String,
     val name: String,
     val description: String,
-    val actions: List<Action>,
-    val items: List<Item>,
-    val interactableObject: List<InteractableObject>
+    val isVisited: Boolean,
+    val actions: List<ActionDTO>,
+    val items: List<ItemDTO>,
+    val interactableObjects: List<InteractableObjectDTO>
 ) {
     companion object {
         fun getSchema(): Schema<JsonObject> {
@@ -39,25 +41,31 @@ data class Room(
                         type = FunctionType.STRING,
                         nullable = false
                     ),
+                    "isVisited" to Schema(
+                        name = "isVisited",
+                        description = "Always set this to false",
+                        type = FunctionType.BOOLEAN,
+                        nullable = false
+                    ),
                     "actions" to Schema(
                         name = "actions",
                         description = "List of actions available in the room",
                         type = FunctionType.ARRAY,
-                        items = Action.getSchema(),
+                        items = ActionDTO.getSchema(),
                         nullable = false
                     ),
                     "items" to Schema(
                         name = "items",
                         description = "List of items in the room",
                         type = FunctionType.ARRAY,
-                        items = Item.getSchema(),
+                        items = ItemDTO.getSchema(),
                         nullable = false
                     ),
-                    "interactableObject" to Schema(
-                        name = "interactableObject",
+                    "interactableObjects" to Schema(
+                        name = "interactableObjects",
                         description = "List of interactable objects in the room",
                         type = FunctionType.ARRAY,
-                        items = InteractableObject.getSchema(),
+                        items = InteractableObjectDTO.getSchema(),
                         nullable = false
                     )
                 ),
@@ -65,12 +73,22 @@ data class Room(
                     "id",
                     "name",
                     "description",
+                    "isVisited",
                     "actions",
                     "items",
-                    "interactableObject"
+                    "interactableObjects"
                 )
             )
         }
 
+        fun RoomDTO.toDMO(gameId: String): RoomDMO {
+            return RoomDMO(
+                id = id,
+                gameId = gameId,
+                name = name,
+                description = description,
+                isVisited = isVisited
+            )
+        }
     }
 }

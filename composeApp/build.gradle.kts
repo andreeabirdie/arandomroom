@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.room)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -28,6 +30,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
+            linkerOpts.add("-lsqlite3")
         }
     }
     
@@ -36,14 +39,11 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.ktor.client.okhttp)
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
-
+            implementation(libs.room.runtime.android)
         }
         iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
-
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -53,18 +53,25 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
 
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.navigation.compose)
+
+            implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.generativeai)
 
             api(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.composeVM)
+
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
+
+            sourceSets.commonMain {
+                kotlin.srcDir("build/generated/ksp/metadata")
+            }
         }
     }
 }
@@ -97,6 +104,14 @@ android {
 
 dependencies {
     debugImplementation(compose.uiTooling)
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 buildkonfig {
