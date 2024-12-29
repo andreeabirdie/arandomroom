@@ -30,21 +30,28 @@ class RoomViewModel(
 
     private val _uiState =
         MutableStateFlow(
-            GameStateDTO(
-                gameId = "",
-                title = "",
-                currentRoom = "",
-                endRoom = "",
-                rooms = emptyList(),
-                actionFeedback = "",
-                inventory = emptyList()
+            RoomState(
+                isLoading = true,
+                gameStateDTO = GameStateDTO(
+                    gameId = "",
+                    title = "",
+                    currentRoom = "",
+                    endRoom = "",
+                    rooms = emptyList(),
+                    actionFeedback = "",
+                    inventory = emptyList()
+                )
             )
         )
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            _uiState.value = gameManagementUseCase.getGameState(gameId)
+            val gameState = gameManagementUseCase.getGameState(gameId)
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                gameStateDTO = gameState
+            )
         }
     }
 
@@ -52,6 +59,7 @@ class RoomViewModel(
         currentRoom: RoomDTO,
         action: String
     ) {
+        _uiState.value = _uiState.value.copy(isLoading = true)
         val validActions = currentRoom.actions.joinToString(
             ", "
         ) {
@@ -63,7 +71,7 @@ class RoomViewModel(
                 Res.string.validate_action_prompt,
                 currentRoom.description,
                 validActions,
-                _uiState.value.inventory.joinToString(", "),
+                _uiState.value.gameStateDTO.inventory.joinToString(", "),
                 action
             )
             prompt = addRules(prompt)
@@ -96,10 +104,16 @@ class RoomViewModel(
         }
 
         when (validatedAction.action?.getActionType()) {
-            ActionType.MOVE -> validatedAction.action.roomDestinationId?.let { roomId ->
+            ActionType.MOVE -> {
+                val destination = validatedAction.action.roomDestinationId ?: currentRoom.actions.find { action ->
+                    action.getActionType() == ActionType.MOVE && action.direction == validatedAction.action.direction
+                }?.roomDestinationId
                 _uiState.value = _uiState.value.copy(
-                    currentRoom = roomId,
-                    actionFeedback = feedback
+                    isLoading = false,
+                    gameStateDTO = _uiState.value.gameStateDTO.copy(
+                        currentRoom = destination ?: currentRoom.id, //todo: show error
+                        actionFeedback = feedback
+                    )
                 )
             }
 
@@ -108,14 +122,20 @@ class RoomViewModel(
                     currentRoom.items.find { it.id == itemId }
                 }?.let { itemDTO ->
                     _uiState.value = _uiState.value.copy(
-                        actionFeedback = feedback,
-                        inventory = _uiState.value.inventory.plus(itemDTO)
+                        isLoading = false,
+                        gameStateDTO = _uiState.value.gameStateDTO.copy(
+                            actionFeedback = feedback,
+                            inventory = _uiState.value.gameStateDTO.inventory.plus(itemDTO)
+                        )
                     )
                 }
             }
 
             else -> {
-                _uiState.value = _uiState.value.copy(actionFeedback = feedback)
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    gameStateDTO = _uiState.value.gameStateDTO.copy(actionFeedback = feedback)
+                )
             }
         }
     }

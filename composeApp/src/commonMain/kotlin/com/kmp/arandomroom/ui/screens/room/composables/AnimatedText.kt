@@ -13,7 +13,11 @@ import com.kmp.arandomroom.utils.TextCharIterator
 import kotlinx.coroutines.delay
 
 @Composable
-fun AnimatedText(text: String, style: TextStyle, animationOngoing: MutableState<Boolean>) {
+fun AnimatedText(
+    text: String,
+    style: TextStyle,
+    onAnimationOngoingChanged: (Boolean) -> Unit
+) {
     val typingDelayInMs = 50L
 
     var substringText by remember { mutableStateOf("") }
@@ -22,7 +26,7 @@ fun AnimatedText(text: String, style: TextStyle, animationOngoing: MutableState<
     LaunchedEffect(charIterator) {
         if (charIterator.isFirst()) {
             substringText = ""
-            animationOngoing.value = true
+            onAnimationOngoingChanged(true)
         }
         delay(typingDelayInMs)
 
@@ -30,7 +34,7 @@ fun AnimatedText(text: String, style: TextStyle, animationOngoing: MutableState<
             substringText += charIterator.next()
             delay(typingDelayInMs)
         }
-        animationOngoing.value = false
+        onAnimationOngoingChanged(false)
     }
 
     Text(

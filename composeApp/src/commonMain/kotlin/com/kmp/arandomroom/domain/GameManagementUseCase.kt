@@ -1,6 +1,7 @@
 package com.kmp.arandomroom.domain
 
 import com.kmp.arandomroom.data.model.ActionDMO.Companion.toDTO
+import com.kmp.arandomroom.data.model.GameStateDMO
 import com.kmp.arandomroom.data.model.GameStateDMO.Companion.toDTO
 import com.kmp.arandomroom.data.model.InteractableObjectDMO.Companion.toDTO
 import com.kmp.arandomroom.data.model.ItemDMO.Companion.toDTO
@@ -64,6 +65,10 @@ class GameManagementUseCase(
                 )
             }
         }
+    }
+
+    suspend fun getAllGames() : List<GameStateDMO> {
+        return gameRepository.getAllGames()
     }
 
     suspend fun getGameState(gameId: String): GameStateDTO {

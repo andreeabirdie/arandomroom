@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kmp.arandomroom.domain.model.GameStateDTO
+import com.kmp.arandomroom.ui.screens.menu.composables.LoadingMenuContent
+import com.kmp.arandomroom.ui.screens.menu.composables.MenuContent
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
 import org.koin.compose.viewmodel.koinViewModel
 import kotlin.uuid.ExperimentalUuidApi
@@ -30,38 +33,28 @@ fun MenuScreen(
     viewModel: MenuViewModel = koinViewModel<MenuViewModel>()
 ) {
     val prompt = remember { mutableStateOf("") }
-    val generatedGameId = viewModel.uiState.collectAsState()
-    val isLoading = remember { mutableStateOf(false) }
+    val uiState = viewModel.uiState.collectAsState()
+    val clickedGenerate = remember { mutableStateOf(false) }
+    val lazyStaggeredGridState = rememberLazyStaggeredGridState()
 
-    generatedGameId.value?.let { gameId ->
+    uiState.value.generatedGameId?.let { gameId ->
         onStartGame(gameId)
-        isLoading.value = false
     }
 
-    Column(
-        Modifier
-            .padding(16.dp)
-            .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.safeDrawing),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Welcome to A Random Room!")
-        Spacer(modifier = Modifier.height(20.dp))
-        PromptTextField(
-            isEnabled = true,
-            inputText = prompt,
-            placeholder = "Enter a theme"
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        FilledTonalButton(
-            enabled = !isLoading.value,
-            onClick = {
-                isLoading.value = true
-                viewModel.generateGame(prompt.value)
-            },
-        ) {
-            Text("Generate a random room")
+    when {
+        uiState.value.isLoading -> LoadingMenuContent(clickedGenerate.value)
+        else -> {
+            MenuContent(
+                prompt = prompt.value,
+                lazyGridState = lazyStaggeredGridState,
+                uiState = uiState.value,
+                onPromptChanged = { prompt.value = it },
+                onStartGame = onStartGame,
+                onGenerate = {
+                    clickedGenerate.value = true
+                    viewModel.generateGame(prompt.value)
+                }
+            )
         }
     }
 }

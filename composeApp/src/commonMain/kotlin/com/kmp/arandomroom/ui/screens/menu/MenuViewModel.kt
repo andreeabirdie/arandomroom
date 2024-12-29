@@ -27,11 +27,30 @@ class MenuViewModel(
     private val gameManagementUseCase: GameManagementUseCase
 ) : ViewModel(), KoinComponent {
 
-    private val _uiState = MutableStateFlow<String?>(null)
+    private val _uiState = MutableStateFlow(
+        MenuState(
+            isLoading = true,
+            games = emptyList(),
+            generatedGameId = null
+        )
+    )
     val uiState = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val games = gameManagementUseCase.getAllGames()
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                games = games
+            )
+        }
+    }
 
     @OptIn(ExperimentalUuidApi::class)
     fun generateGame(theme: String) {
+        _uiState.value = _uiState.value.copy(
+            isLoading = true
+        )
         viewModelScope.launch {
             var prompt = getString(Res.string.generate_game_prompt, theme)
             prompt = addRules(prompt)
@@ -49,7 +68,9 @@ class MenuViewModel(
                     actionFeedback = "",
                     inventory = emptyList()
                 ))
-                _uiState.value = gameId
+                _uiState.value = _uiState.value.copy(
+                    generatedGameId = gameId
+                )
             }
         }
     }

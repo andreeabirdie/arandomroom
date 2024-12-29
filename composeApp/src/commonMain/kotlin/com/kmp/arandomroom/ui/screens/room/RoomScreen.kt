@@ -25,8 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import arandomroom.composeapp.generated.resources.Res
+import arandomroom.composeapp.generated.resources.icon_arrow_back
 import arandomroom.composeapp.generated.resources.icon_send
-import com.kmp.arandomroom.domain.model.GameStateDTO
+import com.kmp.arandomroom.ui.screens.composables.LoadingSquaresAnimation
 import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
 import org.jetbrains.compose.resources.vectorResource
@@ -42,23 +43,39 @@ fun RoomScreen(
 ) {
     val gameState = viewModel.uiState.collectAsState()
 
-    //todo: show loading instead of current solution while the game state is being initialzied
-    gameState.value.rooms.firstOrNull { it.id == gameState.value.currentRoom }?.let { currentRoom ->
-        val prompt = remember { mutableStateOf("") }
-        val animationOngoing = remember { mutableStateOf(true) }
+    Column(
+        Modifier
+            .padding(16.dp)
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        if (gameState.value.isLoading && gameState.value.gameStateDTO.rooms.isEmpty()) {
+            LoadingSquaresAnimation(squareSize = 40f)
+        } else {
+            val currentRoom = gameState.value.gameStateDTO.rooms.first { room ->
+                room.id == gameState.value.gameStateDTO.currentRoom
+            }
+            val prompt = remember { mutableStateOf("") }
+            val roomAnimationOngoing = remember { mutableStateOf(false) }
+            val feedbackAnimationOngoing = remember { mutableStateOf(false) }
 
-        if (gameState.value.currentRoom == gameState.value.endRoom) {
-            onEndGame()
-        }
+            if (gameState.value.gameStateDTO.currentRoom == gameState.value.gameStateDTO.endRoom) {
+                onEndGame()
+            }
 
-        Column(
-            Modifier
-                .padding(16.dp)
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.safeDrawing),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
+            IconButton(
+                modifier = Modifier.padding((-16).dp).align(Alignment.Start),
+                onClick = onExitGame
+            ) {
+                Icon(
+                    imageVector = vectorResource(Res.drawable.icon_arrow_back),
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = "Exit game",
+                )
+            }
+
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -74,20 +91,24 @@ fun RoomScreen(
                 AnimatedText(
                     text = currentRoom.description,
                     style = MaterialTheme.typography.titleMedium,
-                    animationOngoing = animationOngoing
+                    onAnimationOngoingChanged = { roomAnimationOngoing.value = it },
                 )
             }
 
             Column {
-                AnimatedText(
-                    gameState.value.actionFeedback,
-                    style = MaterialTheme.typography.titleSmall,
-                    animationOngoing = mutableStateOf(false)
-                )
-                Spacer(modifier = Modifier.height(30.dp))
+                if (gameState.value.isLoading) {
+                    LoadingSquaresAnimation(squareSize = 20f, isCentered = false)
+                } else {
+                    AnimatedText(
+                        gameState.value.gameStateDTO.actionFeedback,
+                        style = MaterialTheme.typography.titleSmall,
+                        onAnimationOngoingChanged = { feedbackAnimationOngoing.value = it },
+                    )
+                }
+                Spacer(modifier = Modifier.height(20.dp))
                 Row {
                     PromptTextField(
-                        isEnabled = !animationOngoing.value,
+                        isEnabled = !gameState.value.isLoading,
                         inputText = prompt,
                         modifier = Modifier
                             .background(color = MaterialTheme.colorScheme.surfaceDim)
