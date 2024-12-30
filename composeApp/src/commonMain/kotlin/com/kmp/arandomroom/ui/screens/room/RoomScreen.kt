@@ -50,17 +50,14 @@ fun RoomScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        if (gameState.value.isLoading && gameState.value.gameStateDTO.rooms.isEmpty()) {
+        if (gameState.value.isLoading && gameState.value.gameId.isEmpty()) {
             LoadingSquaresAnimation(squareSize = 40f)
         } else {
-            val currentRoom = gameState.value.gameStateDTO.rooms.first { room ->
-                room.id == gameState.value.gameStateDTO.currentRoom
-            }
             val prompt = remember { mutableStateOf("") }
             val roomAnimationOngoing = remember { mutableStateOf(false) }
             val feedbackAnimationOngoing = remember { mutableStateOf(false) }
 
-            if (gameState.value.gameStateDTO.currentRoom == gameState.value.gameStateDTO.endRoom) {
+            if (gameState.value.currentRoom.id == gameState.value.endRoom) {
                 onEndGame()
             }
 
@@ -84,12 +81,12 @@ fun RoomScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = currentRoom.name,
+                    text = gameState.value.currentRoom.name,
                     style = MaterialTheme.typography.titleSmall
                 )
                 Spacer(modifier = Modifier.height(30.dp))
                 AnimatedText(
-                    text = currentRoom.description,
+                    text = gameState.value.currentRoom.description,
                     style = MaterialTheme.typography.titleMedium,
                     onAnimationOngoingChanged = { roomAnimationOngoing.value = it },
                 )
@@ -100,7 +97,7 @@ fun RoomScreen(
                     LoadingSquaresAnimation(squareSize = 20f, isCentered = false)
                 } else {
                     AnimatedText(
-                        gameState.value.gameStateDTO.actionFeedback,
+                        gameState.value.actionFeedback,
                         style = MaterialTheme.typography.titleSmall,
                         onAnimationOngoingChanged = { feedbackAnimationOngoing.value = it },
                     )
@@ -120,7 +117,7 @@ fun RoomScreen(
                         IconButton(
                             modifier = Modifier.padding(8.dp),
                             onClick = {
-                                viewModel.onAction(currentRoom, prompt.value.lowercase())
+                                viewModel.onAction(prompt.value.lowercase())
                                 prompt.value = ""
                             }
                         ) {

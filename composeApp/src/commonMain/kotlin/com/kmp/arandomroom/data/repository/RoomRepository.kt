@@ -9,7 +9,9 @@ class RoomRepository(gameDatabase: GameDatabase) {
 
     suspend fun getAllRoomsForGame(gameId: String) = roomDao.getAllRoomsForGame(gameId)
 
+    suspend fun getRoom(roomId: String) = roomDao.getRoom(roomId)
+
     suspend fun insertRoom(roomDMO: RoomDMO) = roomDao.createRoom(roomDMO)
 
-    suspend fun updateRoom(roomDMO: RoomDMO) = roomDao.updateRoom(roomDMO)
+    suspend fun setRoomIsVisited(roomId: String) = roomDao.setRoomIsVisited(roomId)
 }

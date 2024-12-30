@@ -2,10 +2,12 @@ package com.kmp.arandomroom.data.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.kmp.arandomroom.domain.model.ActionDTO
 import com.kmp.arandomroom.domain.model.InteractableObjectDTO
 import com.kmp.arandomroom.domain.model.ItemDTO
+import com.kmp.arandomroom.domain.model.MoveDTO
 import com.kmp.arandomroom.domain.model.RoomDTO
 
 @Entity(
@@ -16,7 +18,7 @@ import com.kmp.arandomroom.domain.model.RoomDTO
         childColumns = ["gameId"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [androidx.room.Index(value = ["gameId"])]
+    indices = [Index(value = ["gameId"])]
 )
 data class RoomDMO(
     @PrimaryKey val id: String,
@@ -27,6 +29,7 @@ data class RoomDMO(
 ) {
     companion object {
         fun RoomDMO.toDTO(
+            moves: List<MoveDTO>,
             actions: List<ActionDTO>,
             items: List<ItemDTO>,
             interactableObjects: List<InteractableObjectDTO>
@@ -36,6 +39,7 @@ data class RoomDMO(
                 name = name,
                 description = description,
                 isVisited = isVisited,
+                moves = moves,
                 actions = actions,
                 items = items,
                 interactableObjects = interactableObjects,

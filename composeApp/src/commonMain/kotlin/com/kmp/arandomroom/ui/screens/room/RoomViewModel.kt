@@ -10,11 +10,11 @@ import com.kmp.arandomroom.domain.model.ActionDTO
 import com.kmp.arandomroom.domain.model.ActionDTO.Companion.getActionType
 import com.kmp.arandomroom.data.model.ActionType
 import com.kmp.arandomroom.domain.GameManagementUseCase
-import com.kmp.arandomroom.domain.model.GameStateDTO
 import com.kmp.arandomroom.domain.model.RoomDTO
 import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.domain.GenerationUseCase
 import com.kmp.arandomroom.domain.model.ItemDTO
+import com.kmp.arandomroom.domain.model.MoveDTO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -28,50 +28,42 @@ class RoomViewModel(
     private val gameManagementUseCase: GameManagementUseCase
 ) : ViewModel(), KoinComponent {
 
-    private val _uiState =
-        MutableStateFlow(
-            RoomState(
-                isLoading = true,
-                gameStateDTO = GameStateDTO(
-                    gameId = "",
-                    title = "",
-                    currentRoom = "",
-                    endRoom = "",
-                    rooms = emptyList(),
-                    actionFeedback = "",
-                    inventory = emptyList()
-                )
-            )
-        )
+    private val _uiState = MutableStateFlow(RoomState.getDefaultState())
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
             val gameState = gameManagementUseCase.getGameState(gameId)
+            val inventory = gameManagementUseCase.getGameInventory(gameId)
+            val currentRoom = gameManagementUseCase.getRoom(gameId, gameState.currentRoom)
             _uiState.value = _uiState.value.copy(
+                gameId = gameId,
                 isLoading = false,
-                gameStateDTO = gameState
+                currentRoom = currentRoom,
+                endRoom = gameState.endRoom,
+                inventory = inventory,
+                actionFeedback = ""
             )
         }
     }
 
-    fun onAction(
-        currentRoom: RoomDTO,
-        action: String
-    ) {
+    fun onAction(action: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        val validActions = currentRoom.actions.joinToString(
-            ", "
-        ) {
-            Json.encodeToString(ActionDTO.serializer(), it)
-        }
+        val currentRoom = _uiState.value.currentRoom
 
         viewModelScope.launch {
             var prompt = getString(
                 Res.string.validate_action_prompt,
                 currentRoom.description,
-                validActions,
-                _uiState.value.gameStateDTO.inventory.joinToString(", "),
+                currentRoom.moves.joinToString(", ") {
+                    Json.encodeToString(MoveDTO.serializer(), it)
+                },
+                currentRoom.actions.joinToString(", ") {
+                    Json.encodeToString(ActionDTO.serializer(), it)
+                },
+                _uiState.value.inventory.joinToString(", ") {
+                    Json.encodeToString(ItemDTO.serializer(), it)
+                },
                 action
             )
             prompt = addRules(prompt)
@@ -103,40 +95,51 @@ class RoomViewModel(
             getString(Res.string.invalid_action_feedback)
         }
 
-        when (validatedAction.action?.getActionType()) {
-            ActionType.MOVE -> {
-                val destination = validatedAction.action.roomDestinationId ?: currentRoom.actions.find { action ->
-                    action.getActionType() == ActionType.MOVE && action.direction == validatedAction.action.direction
-                }?.roomDestinationId
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    gameStateDTO = _uiState.value.gameStateDTO.copy(
-                        currentRoom = destination ?: currentRoom.id, //todo: show error
-                        actionFeedback = feedback
-                    )
-                )
+        if (validatedAction.actionId == null) {
+            _uiState.value = _uiState.value.copy(
+                isLoading = false,
+                actionFeedback = feedback
+            )
+        }
+
+        validatedAction.actionId?.let { actionId ->
+            currentRoom.moves.firstOrNull { it.id == actionId }?.let { moveDTO ->
+                performMove(moveDTO, feedback)
             }
 
-            ActionType.PICK_UP -> {
-                validatedAction.action.itemId?.let { itemId ->
-                    currentRoom.items.find { it.id == itemId }
-                }?.let { itemDTO ->
-                    _uiState.value = _uiState.value.copy(
-                        isLoading = false,
-                        gameStateDTO = _uiState.value.gameStateDTO.copy(
-                            actionFeedback = feedback,
-                            inventory = _uiState.value.gameStateDTO.inventory.plus(itemDTO)
+            currentRoom.actions.firstOrNull { it.id == actionId }?.let { actionDTO ->
+                when (actionDTO.getActionType()) {
+                    ActionType.PICK_UP -> {
+                        actionDTO.itemId?.let { itemId ->
+                            currentRoom.items.find { it.id == itemId }
+                        }?.let { itemDTO ->
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                actionFeedback = feedback,
+                                inventory = _uiState.value.inventory.plus(itemDTO)
+                            )
+                        }
+                    }
+
+                    else -> {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            actionFeedback = feedback
                         )
-                    )
+                    }
                 }
             }
-
-            else -> {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    gameStateDTO = _uiState.value.gameStateDTO.copy(actionFeedback = feedback)
-                )
-            }
         }
+    }
+
+    private suspend fun performMove(move: MoveDTO, feedback: String) {
+        gameManagementUseCase.setRoomIsVisited(_uiState.value.currentRoom.id)
+        val nextRoom = gameManagementUseCase.getRoom(_uiState.value.gameId, move.roomDestinationId)
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            currentRoom = nextRoom,
+            actionFeedback = feedback
+        )
+        gameManagementUseCase.updateGameState(_uiState.value.gameId, nextRoom.id)
     }
 }

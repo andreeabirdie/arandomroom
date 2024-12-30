@@ -12,7 +12,6 @@ import arandomroom.composeapp.generated.resources.describing_future_room
 import com.kmp.arandomroom.domain.GameManagementUseCase
 import com.kmp.arandomroom.domain.model.GeneratedGame
 import com.kmp.arandomroom.domain.GenerationUseCase
-import com.kmp.arandomroom.domain.model.GameStateDTO
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -69,15 +68,7 @@ class MenuViewModel(
             if (response != null) {
                 val generatedGame = Json.decodeFromString(GeneratedGame.serializer(), response)
                 val gameId = Uuid.random().toString()
-                gameManagementUseCase.insertGame(GameStateDTO(
-                    gameId = gameId,
-                    title = generatedGame.title,
-                    currentRoom = generatedGame.currentRoom,
-                    endRoom = generatedGame.endRoom,
-                    rooms = generatedGame.rooms,
-                    actionFeedback = "",
-                    inventory = emptyList()
-                ))
+                gameManagementUseCase.insertGame(gameId, generatedGame)
                 _uiState.value = _uiState.value.copy(
                     generatedGameId = gameId
                 )

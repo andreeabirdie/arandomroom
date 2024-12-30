@@ -9,11 +9,13 @@ import com.kmp.arandomroom.data.dao.ActionDao
 import com.kmp.arandomroom.data.dao.GameDao
 import com.kmp.arandomroom.data.dao.InteractableObjectDao
 import com.kmp.arandomroom.data.dao.ItemDao
+import com.kmp.arandomroom.data.dao.MoveDao
 import com.kmp.arandomroom.data.dao.RoomDao
 import com.kmp.arandomroom.data.model.ActionDMO
 import com.kmp.arandomroom.data.model.GameStateDMO
 import com.kmp.arandomroom.data.model.InteractableObjectDMO
 import com.kmp.arandomroom.data.model.ItemDMO
+import com.kmp.arandomroom.data.model.MoveDMO
 import com.kmp.arandomroom.data.model.RoomDMO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -24,9 +26,10 @@ import kotlinx.coroutines.IO
         RoomDMO::class,
         ItemDMO::class,
         InteractableObjectDMO::class,
-        ActionDMO::class
+        ActionDMO::class,
+        MoveDMO::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @ConstructedBy(GameDatabaseConstructor::class)
@@ -36,6 +39,7 @@ abstract class GameDatabase : RoomDatabase() {
     abstract fun getItemDao(): ItemDao
     abstract fun getInteractableObjectDao(): InteractableObjectDao
     abstract fun getActionDao(): ActionDao
+    abstract fun getMoveDao(): MoveDao
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")

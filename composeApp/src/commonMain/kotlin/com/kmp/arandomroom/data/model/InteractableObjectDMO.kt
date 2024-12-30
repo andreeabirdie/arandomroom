@@ -2,6 +2,7 @@ package com.kmp.arandomroom.data.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.kmp.arandomroom.domain.model.InteractableObjectDTO
 
@@ -28,9 +29,9 @@ import com.kmp.arandomroom.domain.model.InteractableObjectDTO
         )
     ],
     indices = [
-        androidx.room.Index(value = ["gameId"]),
-        androidx.room.Index(value = ["roomId"]),
-        androidx.room.Index(value = ["requiredItem"])
+        Index(value = ["gameId"]),
+        Index(value = ["roomId"]),
+        Index(value = ["requiredItem"])
     ]
 )
 data class InteractableObjectDMO(

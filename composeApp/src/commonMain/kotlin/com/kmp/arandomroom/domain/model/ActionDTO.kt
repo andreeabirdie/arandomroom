@@ -9,9 +9,8 @@ import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class ActionDTO(
+    val id: String,
     val type: String,
-    val direction: String?,
-    val roomDestinationId: String?,
     val itemId: String?,
     val objectId: String?
 ) {
@@ -28,24 +27,18 @@ data class ActionDTO(
                 description = "An action that can be performed",
                 type = FunctionType.OBJECT,
                 properties = mapOf(
-                    "type" to Schema(
-                        name = "type",
-                        description = "Type of action the user can perform. Move is used when navigating to a different room, PickUp is used when picking up an item from the room, Use is used when using an item from the inventory, Open is used when opening an object in the room",
+                    "id" to Schema(
+                        name = "id",
+                        description = "Unique identifier for the action",
                         type = FunctionType.STRING,
-                        enum = listOf("Move", "PickUp", "Use", "Open"),
                         nullable = false
                     ),
-                    "direction" to Schema(
-                        name = "direction",
-                        description = "Direction to move (only for Move action), null otherwise",
+                    "type" to Schema(
+                        name = "type",
+                        description = "Type of action the user can perform. PickUp is used when picking up an item from the room, Use is used when using an item from the inventory, Interact is used when interacting with an object in the room",
                         type = FunctionType.STRING,
-                        nullable = true
-                    ),
-                    "roomDestinationId" to Schema(
-                        name = "roomDestinationId",
-                        description = "Room ID to move to (only for Move action), null otherwise",
-                        type = FunctionType.STRING,
-                        nullable = true
+                        enum = listOf("PickUp", "Use", "Interact"),
+                        nullable = false
                     ),
                     "itemId" to Schema(
                         name = "itemId",
@@ -55,12 +48,12 @@ data class ActionDTO(
                     ),
                     "objectId" to Schema(
                         name = "objectId",
-                        description = "Object ID to interact with (only for Use or Open actions), null otherwise",
+                        description = "Object ID to interact with (only for Use or Interact actions), null otherwise",
                         type = FunctionType.STRING,
                         nullable = true
                     )
                 ),
-                required = listOf("type", "direction", "roomDestinationId", "itemId", "objectId")
+                required = listOf("id", "type", "itemId", "objectId")
             )
         }
 
@@ -69,11 +62,10 @@ data class ActionDTO(
             roomId: String
         ): ActionDMO {
             return ActionDMO(
+                id = id,
                 gameId = gameId,
                 roomId = roomId,
                 type = type,
-                direction = direction,
-                roomDestinationId = roomDestinationId,
                 itemId = itemId,
                 objectId = objectId
             )

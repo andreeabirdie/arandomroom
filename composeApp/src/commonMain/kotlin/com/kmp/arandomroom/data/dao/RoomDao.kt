@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.kmp.arandomroom.data.model.RoomDMO
 
 @Dao
@@ -13,8 +12,11 @@ interface RoomDao {
     @Query("SELECT * FROM rooms WHERE gameId = :gameId")
     suspend fun getAllRoomsForGame(gameId: String): List<RoomDMO>
 
-    @Update
-    suspend fun updateRoom(room: RoomDMO)
+    @Query("SELECT * FROM rooms WHERE id = :roomId")
+    suspend fun getRoom(roomId: String): RoomDMO
+
+    @Query("UPDATE rooms SET isVisited = true WHERE id = :roomId")
+    suspend fun setRoomIsVisited(roomId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createRoom(room: RoomDMO)

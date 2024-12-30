@@ -7,7 +7,7 @@ import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class ValidatedAction(
-    val action: ActionDTO?,
+    val actionId: String?,
     val actionFeedback: String
 ) {
     companion object {
@@ -17,22 +17,19 @@ data class ValidatedAction(
                 description = "A validated action transformed from user input",
                 type = FunctionType.OBJECT,
                 properties = mapOf(
-                    "action" to Schema(
+                    "actionId" to Schema(
                         name = "action",
-                        description = "Action object if valid action was provided, null otherwise",
-                        type = FunctionType.OBJECT,
-                        properties = ActionDTO.getSchema().properties,
-                        required = ActionDTO.getSchema().required,
+                        description = "Id of the identified action to be performed",
+                        type = FunctionType.STRING,
                         nullable = true
                     ),
                     "actionFeedback" to Schema(
                         name = "actionFeedback",
-                        description = "Feedback message for the action",
-                        type = FunctionType.STRING,
-                        nullable = true
+                        description = "Feedback message for the action if it's not an existing action",
+                        type = FunctionType.STRING
                     )
                 ),
-                required = listOf("action", "actionFeedback")
+                required = listOf("actionId", "actionFeedback")
             )
         }
 

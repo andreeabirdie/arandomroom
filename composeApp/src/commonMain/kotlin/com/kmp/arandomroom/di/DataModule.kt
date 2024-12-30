@@ -6,6 +6,7 @@ import com.kmp.arandomroom.data.repository.ActionRepository
 import com.kmp.arandomroom.data.repository.GameRepository
 import com.kmp.arandomroom.data.repository.InteractableObjectRepository
 import com.kmp.arandomroom.data.repository.ItemRepository
+import com.kmp.arandomroom.data.repository.MoveRepository
 import com.kmp.arandomroom.data.repository.RoomRepository
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -20,4 +21,5 @@ val dataModule = module {
     singleOf(::ItemRepository).bind(ItemRepository::class)
     singleOf(::InteractableObjectRepository).bind(InteractableObjectRepository::class)
     singleOf(::ActionRepository).bind(ActionRepository::class)
+    singleOf(::MoveRepository).bind(MoveRepository::class)
 }

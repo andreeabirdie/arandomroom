@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.kmp.arandomroom.domain.model.GameStateDTO
 import com.kmp.arandomroom.ui.screens.menu.composables.LoadingMenuContent
 import com.kmp.arandomroom.ui.screens.menu.composables.MenuContent
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField

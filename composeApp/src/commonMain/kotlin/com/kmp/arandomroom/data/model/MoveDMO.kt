@@ -4,10 +4,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.kmp.arandomroom.domain.model.ActionDTO
+import com.kmp.arandomroom.domain.model.MoveDTO
 
 @Entity(
-    tableName = "actions",
+    tableName = "moves",
     foreignKeys = [
         ForeignKey(
             entity = GameStateDMO::class,
@@ -20,42 +20,26 @@ import com.kmp.arandomroom.domain.model.ActionDTO
             parentColumns = ["id"],
             childColumns = ["roomId"],
             onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = ItemDMO::class,
-            parentColumns = ["id"],
-            childColumns = ["itemId"],
-            onDelete = ForeignKey.SET_NULL
-        ),
-        ForeignKey(
-            entity = InteractableObjectDMO::class,
-            parentColumns = ["id"],
-            childColumns = ["objectId"],
-            onDelete = ForeignKey.SET_NULL
         )
     ],
     indices = [
         Index(value = ["gameId"]),
         Index(value = ["roomId"]),
-        Index(value = ["itemId"]),
-        Index(value = ["objectId"])
     ]
 )
-data class ActionDMO(
+data class MoveDMO(
     @PrimaryKey val id: String,
     val gameId: String,
     val roomId: String,
-    val type: String,
-    val itemId: String?,
-    val objectId: String?
+    val direction: String,
+    val roomDestinationId: String
 ) {
     companion object {
-        fun ActionDMO.toDTO(): ActionDTO {
-            return ActionDTO(
+        fun MoveDMO.toDTO(): MoveDTO {
+            return MoveDTO(
                 id = id,
-                type = type,
-                itemId = itemId,
-                objectId = objectId
+                direction = direction,
+                roomDestinationId = roomDestinationId
             )
         }
     }

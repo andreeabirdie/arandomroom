@@ -16,8 +16,8 @@ interface GameDao {
     @Query("SELECT * FROM games WHERE id = :gameId")
     suspend fun getGameById(gameId: String): GameStateDMO
 
-    @Update
-    suspend fun updateGame(game: GameStateDMO)
+    @Query("UPDATE games SET currentRoom = :currentRoomId WHERE id = :gameId")
+    suspend fun updateGameState(gameId: String, currentRoomId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createGame(game: GameStateDMO)

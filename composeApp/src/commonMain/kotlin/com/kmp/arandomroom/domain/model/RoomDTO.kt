@@ -12,9 +12,10 @@ data class RoomDTO(
     val name: String,
     val description: String,
     val isVisited: Boolean,
-    val actions: List<ActionDTO>,
     val items: List<ItemDTO>,
-    val interactableObjects: List<InteractableObjectDTO>
+    val interactableObjects: List<InteractableObjectDTO>,
+    val actions: List<ActionDTO>,
+    val moves: List<MoveDTO>
 ) {
     companion object {
         fun getSchema(): Schema<JsonObject> {
@@ -47,11 +48,11 @@ data class RoomDTO(
                         type = FunctionType.BOOLEAN,
                         nullable = false
                     ),
-                    "actions" to Schema(
-                        name = "actions",
-                        description = "List of actions available in the room",
+                    "moves" to Schema(
+                        name = "moves",
+                        description = "List of moves available in the room",
                         type = FunctionType.ARRAY,
-                        items = ActionDTO.getSchema(),
+                        items = MoveDTO.getSchema(),
                         nullable = false
                     ),
                     "items" to Schema(
@@ -67,7 +68,14 @@ data class RoomDTO(
                         type = FunctionType.ARRAY,
                         items = InteractableObjectDTO.getSchema(),
                         nullable = false
-                    )
+                    ),
+                    "actions" to Schema(
+                        name = "actions",
+                        description = "List of actions available in the room",
+                        type = FunctionType.ARRAY,
+                        items = ActionDTO.getSchema(),
+                        nullable = false
+                    ),
                 ),
                 required = listOf(
                     "id",
@@ -75,6 +83,7 @@ data class RoomDTO(
                     "description",
                     "isVisited",
                     "actions",
+                    "moves",
                     "items",
                     "interactableObjects"
                 )

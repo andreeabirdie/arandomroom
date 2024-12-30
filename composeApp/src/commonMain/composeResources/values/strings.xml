@@ -8,5 +8,5 @@
     <string name="generate_game_prompt">Generate a %1$s themed game with the following structure.</string>
     <string name="invalid_action_feedback">You can't do that.</string>
     <string name="using_items_rule">For an item to be used it has to exist in inventory.</string>
-    <string name="validate_action_prompt">Given the current room's description %1$s and actions: %2$s, the user's inventory %3$s and the command: '%4$s', indicate if the command corresponds to a valid action and give feedback.</string>
+    <string name="validate_action_prompt">Given the current room's description %1$s, moves %2$s, and actions: %3$s, the user's inventory %4$s and the command: '%5$s', indicate if the command corresponds to a valid action and give feedback.</string>
 </resources>
