@@ -45,7 +45,6 @@ fun RoomScreen(
 
     Column(
         Modifier
-            .padding(16.dp)
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +65,7 @@ fun RoomScreen(
             }
 
             IconButton(
-                modifier = Modifier.padding((-16).dp).align(Alignment.Start),
+                modifier = Modifier.align(Alignment.Start),
                 onClick = onExitGame
             ) {
                 Icon(
@@ -78,6 +77,7 @@ fun RoomScreen(
 
             Column(
                 modifier = Modifier
+                    .padding(16.dp)
                     .weight(1f)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,7 +95,7 @@ fun RoomScreen(
                 )
             }
 
-            Column {
+            Column(modifier = Modifier.padding(16.dp)) {
                 if (gameState.value.isLoading) {
                     LoadingSquaresAnimation(squareSize = 20f, isCentered = false)
                 } else {

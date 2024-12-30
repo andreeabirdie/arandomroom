@@ -1,15 +1,21 @@
 package com.kmp.arandomroom.ui.screens.menu.composables
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
@@ -43,69 +49,80 @@ fun MenuContent(
 ) {
     Column(
         Modifier
-            .padding(16.dp)
+            .padding(vertical = 20.dp)
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        Image(
-            modifier = Modifier.height(200.dp),
-            painter = painterResource(Res.drawable.icon_logo),
-            contentDescription = "A Random Room logo"
-        )
-        PromptTextField(
-            isEnabled = true,
-            inputText = prompt,
-            onInputChanged = onPromptChanged,
-            placeholder = "Enter a theme"
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        FilledTonalButton(
-            enabled = !uiState.isLoading,
-            onClick = onGenerate
+        Column(
+            modifier = Modifier.fillMaxWidth().fillMaxHeight(0.4f),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = "Generate a new adventure")
+            Image(
+                modifier = Modifier.height(200.dp),
+                painter = painterResource(Res.drawable.icon_logo),
+                contentDescription = "A Random Room logo"
+            )
+            PromptTextField(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                isEnabled = true,
+                inputText = prompt,
+                onInputChanged = onPromptChanged,
+                placeholder = "Enter a theme"
+            )
+            FilledTonalButton(
+                modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp),
+                enabled = !uiState.isLoading,
+                onClick = onGenerate
+            ) {
+                Text(text = "Generate a new adventure")
+            }
         }
 
-        if (uiState.games.isNotEmpty()) {
-            OrDivider(modifier = Modifier.padding(top = 16.dp))
-            Text(
-                text = "Return to the familiar",
-                modifier = Modifier.padding(16.dp)
-            )
-            LazyHorizontalStaggeredGrid(
-                modifier = Modifier
-                    .height(200.dp)
-                    .leftFadingEdge(
-                        color = MaterialTheme.colors.primary,
-                        size = fadingEdgeAnimateDpAsState(
-                            maxSize = 30.dp,
-                            isVisible = lazyGridState.canScrollForward
-                        ).value
-                    )
-                    .rightFadingEdge(
-                        color = MaterialTheme.colors.primary,
-                        size = fadingEdgeAnimateDpAsState(
-                            maxSize = 30.dp,
-                            isVisible = lazyGridState.canScrollBackward
-                        ).value
-                    ),
-                state = lazyGridState,
-                rows = StaggeredGridCells.Adaptive(50.dp),
-                horizontalItemSpacing = 8.dp
+        AnimatedVisibility(
+            visible = uiState.games.isNotEmpty(),
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.6f),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                items(uiState.games) { game ->
-                    FilledTonalButton(
-                        modifier = Modifier.wrapContentSize(),
-                        onClick = { onStartGame(game.id) }
-                    ) {
-                        Text(text = game.title)
+                OrDivider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp))
+                Text(modifier = Modifier.padding(horizontal = 16.dp),
+                    text = "Return to the familiar")
+                LazyHorizontalStaggeredGrid(
+                    modifier = Modifier
+                        .padding(vertical = 20.dp)
+                        .height(200.dp)
+                        .leftFadingEdge(
+                            color = MaterialTheme.colors.primary,
+                            size = fadingEdgeAnimateDpAsState(
+                                maxSize = 30.dp,
+                                isVisible = lazyGridState.canScrollForward
+                            ).value
+                        )
+                        .rightFadingEdge(
+                            color = MaterialTheme.colors.primary,
+                            size = fadingEdgeAnimateDpAsState(
+                                maxSize = 30.dp,
+                                isVisible = lazyGridState.canScrollBackward
+                            ).value
+                        ),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
+                    state = lazyGridState,
+                    rows = StaggeredGridCells.Adaptive(50.dp),
+                    horizontalItemSpacing = 8.dp
+                ) {
+                    items(uiState.games) { game ->
+                        FilledTonalButton(
+                            modifier = Modifier.wrapContentSize(),
+                            onClick = { onStartGame(game.id) }
+                        ) {
+                            Text(text = game.title)
+                        }
                     }
                 }
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
     }
 }
