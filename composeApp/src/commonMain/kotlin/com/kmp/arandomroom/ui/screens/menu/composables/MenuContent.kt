@@ -25,6 +25,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -45,6 +47,7 @@ fun MenuContent(
     uiState: MenuState,
     onPromptChanged: (String) -> Unit,
     onStartGame: (String) -> Unit,
+    onDeleteGame: (String) -> Unit,
     onGenerate: () -> Unit,
 ) {
     Column(
@@ -83,13 +86,16 @@ fun MenuContent(
         AnimatedVisibility(
             visible = uiState.games.isNotEmpty(),
         ) {
+            val selectedGame = remember { mutableStateOf("") }
             Column(
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(0.6f),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 OrDivider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp))
-                Text(modifier = Modifier.padding(horizontal = 16.dp),
-                    text = "Return to the familiar")
+                Text(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    text = "Return to the familiar"
+                )
                 LazyHorizontalStaggeredGrid(
                     modifier = Modifier
                         .padding(vertical = 20.dp)
@@ -114,12 +120,19 @@ fun MenuContent(
                     horizontalItemSpacing = 8.dp
                 ) {
                     items(uiState.games) { game ->
-                        FilledTonalButton(
-                            modifier = Modifier.wrapContentSize(),
-                            onClick = { onStartGame(game.id) }
-                        ) {
-                            Text(text = game.title)
-                        }
+                        TitleGameButton(
+                            game = game,
+                            isLongPressed = selectedGame.value == game.id,
+                            onLongPress = { gameId ->
+                                if (selectedGame.value == gameId) {
+                                    selectedGame.value = ""
+                                } else {
+                                    selectedGame.value = gameId
+                                }
+                            },
+                            onStartGame = onStartGame,
+                            onDeleteGame = onDeleteGame
+                        )
                     }
                 }
             }

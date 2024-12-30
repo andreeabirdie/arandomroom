@@ -71,6 +71,10 @@ class GameManagementUseCase(
         return gameRepository.getAllGames()
     }
 
+    suspend fun deleteGame(gameId: String) {
+        gameRepository.deleteGame(gameId)
+    }
+
     suspend fun getGameState(gameId: String): GameStateDTO {
         val rooms = roomRepository.getAllRoomsForGame(gameId).map { room ->
             val items = itemRepository.getAllItemsForRoom(

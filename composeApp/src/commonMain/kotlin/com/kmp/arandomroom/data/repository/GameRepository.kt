@@ -14,4 +14,6 @@ class GameRepository(gameDatabase: GameDatabase) {
     suspend fun updateGame(game: GameStateDMO) = gameDao.updateGame(game)
 
     suspend fun insertGame(game: GameStateDMO) = gameDao.createGame(game)
+
+    suspend fun deleteGame(gameId: String) = gameDao.deleteGame(gameId)
 }

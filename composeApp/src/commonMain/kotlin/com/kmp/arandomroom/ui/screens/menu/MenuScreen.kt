@@ -50,6 +50,7 @@ fun MenuScreen(
                 uiState = uiState.value,
                 onPromptChanged = { prompt.value = it },
                 onStartGame = onStartGame,
+                onDeleteGame = { gameId -> viewModel.deleteGame(gameId) },
                 onGenerate = {
                     clickedGenerate.value = true
                     viewModel.generateGame(prompt.value)

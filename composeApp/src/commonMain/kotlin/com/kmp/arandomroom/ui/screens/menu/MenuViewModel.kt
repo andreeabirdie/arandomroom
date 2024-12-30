@@ -46,6 +46,16 @@ class MenuViewModel(
         }
     }
 
+    fun deleteGame(gameId: String) {
+        viewModelScope.launch {
+            gameManagementUseCase.deleteGame(gameId)
+            val games = gameManagementUseCase.getAllGames()
+            _uiState.value = _uiState.value.copy(
+                games = games
+            )
+        }
+    }
+
     @OptIn(ExperimentalUuidApi::class)
     fun generateGame(theme: String) {
         _uiState.value = _uiState.value.copy(
