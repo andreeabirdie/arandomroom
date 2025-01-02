@@ -1,13 +1,13 @@
 package com.kmp.arandomroom.domain.model
 
-import com.kmp.arandomroom.data.model.InteractableObjectDMO
+import com.kmp.arandomroom.data.model.ObjectDMO
 import dev.shreyaspatil.ai.client.generativeai.type.FunctionType
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
 @Serializable
-data class InteractableObjectDTO(
+data class ObjectDTO(
     val id: String,
     val name: String,
     val description: String,
@@ -16,7 +16,7 @@ data class InteractableObjectDTO(
     companion object {
         fun getSchema() : Schema<JsonObject> {
             return Schema(
-                name = "interactableObject",
+                name = "object",
                 description = "An interactable object in the game",
                 type = FunctionType.OBJECT,
                 properties = mapOf(
@@ -49,11 +49,11 @@ data class InteractableObjectDTO(
             )
         }
 
-        fun InteractableObjectDTO.toDMO(
+        fun ObjectDTO.toDMO(
             gameId: String,
             roomId: String
-        ) : InteractableObjectDMO {
-            return InteractableObjectDMO(
+        ) : ObjectDMO {
+            return ObjectDMO(
                 id = id,
                 gameId = gameId,
                 roomId = roomId,

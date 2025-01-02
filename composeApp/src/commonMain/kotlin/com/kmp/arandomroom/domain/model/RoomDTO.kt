@@ -13,8 +13,7 @@ data class RoomDTO(
     val description: String,
     val isVisited: Boolean,
     val items: List<ItemDTO>,
-    val interactableObjects: List<InteractableObjectDTO>,
-    val actions: List<ActionDTO>,
+    val objects: List<ObjectDTO>,
     val moves: List<MoveDTO>
 ) {
     companion object {
@@ -38,7 +37,7 @@ data class RoomDTO(
                     ),
                     "description" to Schema(
                         name = "description",
-                        description = "Description of the room",
+                        description = "Description of the room. Don't include items and their placement in this description",
                         type = FunctionType.STRING,
                         nullable = false
                     ),
@@ -57,35 +56,27 @@ data class RoomDTO(
                     ),
                     "items" to Schema(
                         name = "items",
-                        description = "List of items in the room",
+                        description = "List of items in the room. Make sure to add any items that can be pick up here.",
                         type = FunctionType.ARRAY,
                         items = ItemDTO.getSchema(),
                         nullable = false
                     ),
-                    "interactableObjects" to Schema(
-                        name = "interactableObjects",
+                    "objects" to Schema(
+                        name = "objects",
                         description = "List of interactable objects in the room",
                         type = FunctionType.ARRAY,
-                        items = InteractableObjectDTO.getSchema(),
+                        items = ObjectDTO.getSchema(),
                         nullable = false
-                    ),
-                    "actions" to Schema(
-                        name = "actions",
-                        description = "List of actions available in the room",
-                        type = FunctionType.ARRAY,
-                        items = ActionDTO.getSchema(),
-                        nullable = false
-                    ),
+                    )
                 ),
                 required = listOf(
                     "id",
                     "name",
                     "description",
                     "isVisited",
-                    "actions",
                     "moves",
                     "items",
-                    "interactableObjects"
+                    "objects"
                 )
             )
         }

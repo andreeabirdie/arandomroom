@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import com.kmp.arandomroom.utils.TextCharIterator
 import kotlinx.coroutines.delay
@@ -16,7 +17,7 @@ import kotlinx.coroutines.delay
 fun AnimatedText(
     text: String,
     style: TextStyle,
-    onAnimationOngoingChanged: (Boolean) -> Unit
+    modifier: Modifier = Modifier
 ) {
     val typingDelayInMs = 50L
 
@@ -26,7 +27,6 @@ fun AnimatedText(
     LaunchedEffect(charIterator) {
         if (charIterator.isFirst()) {
             substringText = ""
-            onAnimationOngoingChanged(true)
         }
         delay(typingDelayInMs)
 
@@ -34,10 +34,10 @@ fun AnimatedText(
             substringText += charIterator.next()
             delay(typingDelayInMs)
         }
-        onAnimationOngoingChanged(false)
     }
 
     Text(
+        modifier = modifier,
         text = substringText,
         style = style
     )

@@ -5,23 +5,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,12 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.icon_logo
-import com.kmp.arandomroom.ui.screens.composables.LoadingSquaresAnimation
 import com.kmp.arandomroom.ui.screens.composables.PromptTextField
 import com.kmp.arandomroom.ui.screens.composables.fadingEdgeAnimateDpAsState
 import com.kmp.arandomroom.ui.screens.composables.leftFadingEdge
 import com.kmp.arandomroom.ui.screens.composables.rightFadingEdge
 import com.kmp.arandomroom.ui.screens.menu.MenuState
+import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -67,6 +63,15 @@ fun MenuContent(
                 painter = painterResource(Res.drawable.icon_logo),
                 contentDescription = "A Random Room logo"
             )
+            uiState.error?.let { errorMessage ->
+                AnimatedText(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    text = uiState.error,
+                    style = MaterialTheme.typography.titleSmall.copy(
+                        color = MaterialTheme.colorScheme.error
+                    )
+                )
+            }
             PromptTextField(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 isEnabled = true,
@@ -101,14 +106,14 @@ fun MenuContent(
                         .padding(vertical = 20.dp)
                         .height(200.dp)
                         .leftFadingEdge(
-                            color = MaterialTheme.colors.primary,
+                            color = MaterialTheme.colorScheme.primary,
                             size = fadingEdgeAnimateDpAsState(
                                 maxSize = 30.dp,
                                 isVisible = lazyGridState.canScrollForward
                             ).value
                         )
                         .rightFadingEdge(
-                            color = MaterialTheme.colors.primary,
+                            color = MaterialTheme.colorScheme.primary,
                             size = fadingEdgeAnimateDpAsState(
                                 maxSize = 30.dp,
                                 isVisible = lazyGridState.canScrollBackward

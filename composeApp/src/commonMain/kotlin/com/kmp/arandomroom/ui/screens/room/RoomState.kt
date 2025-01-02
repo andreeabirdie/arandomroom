@@ -20,11 +20,10 @@ data class RoomState(
                     id = "",
                     description = "",
                     moves = emptyList(),
-                    actions = emptyList(),
                     name = "",
                     isVisited = false,
                     items = emptyList(),
-                    interactableObjects = emptyList()
+                    objects = emptyList()
                 ),
                 endRoom = "",
                 inventory = emptyList(),

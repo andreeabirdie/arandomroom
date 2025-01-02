@@ -5,17 +5,21 @@ import com.kmp.arandomroom.data.model.ItemDMO
 
 class ItemRepository(gameDatabase: GameDatabase) {
 
-    private val itemRepository = gameDatabase.getItemDao()
+    private val itemDao = gameDatabase.getItemDao()
 
     suspend fun getAllItemsForRoom(roomId: String, gameId: String) : List<ItemDMO> {
-        return itemRepository.getAllItemsForRoom(roomId, gameId)
+        return itemDao.getAllItemsForRoom(roomId, gameId)
     }
 
     suspend fun getInventoryItemsForGame(gameId: String) : List<ItemDMO> {
-        return itemRepository.getInventoryItemsForGame(gameId)
+        return itemDao.getInventoryItemsForGame(gameId)
+    }
+
+    suspend fun setItemIsInInventory(itemId: String) {
+        itemDao.setItemIsInInventory(itemId)
     }
 
     suspend fun insertItem(item: ItemDMO) {
-        itemRepository.createItem(item)
+        itemDao.createItem(item)
     }
 }

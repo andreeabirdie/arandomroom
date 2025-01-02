@@ -16,7 +16,7 @@ data class MoveDTO(
         fun getSchema(): Schema<JsonObject> {
             return Schema(
                 name = "move",
-                description = "A move made by the player",
+                description = "A move made by the player. Moves must are bidirectional. If I move west into a room then the room I moved into must have a move east into the room I came from.",
                 type = FunctionType.OBJECT,
                 properties = mapOf(
                     "id" to Schema(

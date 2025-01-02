@@ -4,8 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.kmp.arandomroom.domain.model.ActionDTO
-import com.kmp.arandomroom.domain.model.InteractableObjectDTO
+import com.kmp.arandomroom.domain.model.ObjectDTO
 import com.kmp.arandomroom.domain.model.ItemDTO
 import com.kmp.arandomroom.domain.model.MoveDTO
 import com.kmp.arandomroom.domain.model.RoomDTO
@@ -30,19 +29,26 @@ data class RoomDMO(
     companion object {
         fun RoomDMO.toDTO(
             moves: List<MoveDTO>,
-            actions: List<ActionDTO>,
             items: List<ItemDTO>,
-            interactableObjects: List<InteractableObjectDTO>
+            objects: List<ObjectDTO>
         ): RoomDTO {
+            val displayableDescription = description
+            items.forEach { item ->
+                println("qwerty item: $item")
+                displayableDescription + " " + item.descriptionOfItemPlacement
+            }
+
+            objects.forEach { objectDTO ->
+                println("qwerty object: $objectDTO")
+            }
             return RoomDTO(
                 id = id,
                 name = name,
-                description = description,
+                description = displayableDescription,
                 isVisited = isVisited,
                 moves = moves,
-                actions = actions,
                 items = items,
-                interactableObjects = interactableObjects,
+                objects = objects,
             )
         }
     }

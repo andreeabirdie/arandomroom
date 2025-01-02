@@ -3,12 +3,14 @@ package com.kmp.arandomroom.ui.screens.menu
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arandomroom.composeapp.generated.resources.Res
-import arandomroom.composeapp.generated.resources.action_description_rule
+import arandomroom.composeapp.generated.resources.unique_ids_rule
+import arandomroom.composeapp.generated.resources.move_description_rule
 import arandomroom.composeapp.generated.resources.enforce_interactable_objects_rule
 import arandomroom.composeapp.generated.resources.enforce_items_rule
 import arandomroom.composeapp.generated.resources.generate_game_prompt
 import arandomroom.composeapp.generated.resources.start_end_parameters_rule
 import arandomroom.composeapp.generated.resources.describing_future_room
+import arandomroom.composeapp.generated.resources.error_message
 import com.kmp.arandomroom.domain.GameManagementUseCase
 import com.kmp.arandomroom.domain.model.GeneratedGame
 import com.kmp.arandomroom.domain.GenerationUseCase
@@ -30,7 +32,8 @@ class MenuViewModel(
         MenuState(
             isLoading = true,
             games = emptyList(),
-            generatedGameId = null
+            generatedGameId = null,
+            error = null
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -50,7 +53,8 @@ class MenuViewModel(
             gameManagementUseCase.deleteGame(gameId)
             val games = gameManagementUseCase.getAllGames()
             _uiState.value = _uiState.value.copy(
-                games = games
+                games = games,
+                error = null
             )
         }
     }
@@ -58,19 +62,27 @@ class MenuViewModel(
     @OptIn(ExperimentalUuidApi::class)
     fun generateGame(theme: String) {
         _uiState.value = _uiState.value.copy(
-            isLoading = true
+            isLoading = true,
+            error = null
         )
         viewModelScope.launch {
             var prompt = getString(Res.string.generate_game_prompt, theme)
             prompt = addRules(prompt)
 
-            val response = generationUseCase.generateResponse(prompt, null)
-            if (response != null) {
-                val generatedGame = Json.decodeFromString(GeneratedGame.serializer(), response)
-                val gameId = Uuid.random().toString()
-                gameManagementUseCase.insertGame(gameId, generatedGame)
+            try {
+                val response = generationUseCase.generateResponse(prompt)
+                if (response != null) {
+                    val generatedGame = Json.decodeFromString(GeneratedGame.serializer(), response)
+                    val gameId = Uuid.random().toString()
+                    gameManagementUseCase.insertGame(gameId, generatedGame)
+                    _uiState.value = _uiState.value.copy(
+                        generatedGameId = gameId
+                    )
+                }
+            } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
-                    generatedGameId = gameId
+                    isLoading = false,
+                    error = getString(Res.string.error_message)
                 )
             }
         }
@@ -82,11 +94,13 @@ class MenuViewModel(
         } ${
             getString(Res.string.enforce_interactable_objects_rule)
         } ${
-            getString(Res.string.enforce_items_rule)
+            getString(Res.string.move_description_rule)
         } ${
             getString(Res.string.describing_future_room)
         } ${
-            getString(Res.string.action_description_rule)
+            getString(Res.string.enforce_items_rule)
+        } ${
+            getString(Res.string.unique_ids_rule)
         }"
     }
 }

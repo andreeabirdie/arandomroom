@@ -4,10 +4,10 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.kmp.arandomroom.domain.model.ActionDTO
+import com.kmp.arandomroom.domain.model.ObjectDTO
 
 @Entity(
-    tableName = "actions",
+    tableName = "objects",
     foreignKeys = [
         ForeignKey(
             entity = GameStateDMO::class,
@@ -24,38 +24,31 @@ import com.kmp.arandomroom.domain.model.ActionDTO
         ForeignKey(
             entity = ItemDMO::class,
             parentColumns = ["id"],
-            childColumns = ["itemId"],
-            onDelete = ForeignKey.SET_NULL
-        ),
-        ForeignKey(
-            entity = InteractableObjectDMO::class,
-            parentColumns = ["id"],
-            childColumns = ["objectId"],
+            childColumns = ["requiredItem"],
             onDelete = ForeignKey.SET_NULL
         )
     ],
     indices = [
         Index(value = ["gameId"]),
         Index(value = ["roomId"]),
-        Index(value = ["itemId"]),
-        Index(value = ["objectId"])
+        Index(value = ["requiredItem"])
     ]
 )
-data class ActionDMO(
+data class ObjectDMO(
     @PrimaryKey val id: String,
     val gameId: String,
     val roomId: String,
-    val type: String,
-    val itemId: String?,
-    val objectId: String?
+    val name: String,
+    val description: String,
+    val requiredItem: String?
 ) {
     companion object {
-        fun ActionDMO.toDTO(): ActionDTO {
-            return ActionDTO(
+        fun ObjectDMO.toDTO(): ObjectDTO {
+            return ObjectDTO(
                 id = id,
-                type = type,
-                itemId = itemId,
-                objectId = objectId
+                name = name,
+                description = description,
+                requiredItem = requiredItem
             )
         }
     }

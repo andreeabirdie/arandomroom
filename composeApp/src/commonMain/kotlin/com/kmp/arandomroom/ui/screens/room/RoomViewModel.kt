@@ -5,16 +5,15 @@ import androidx.lifecycle.viewModelScope
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.invalid_action_feedback
 import arandomroom.composeapp.generated.resources.validate_action_prompt
-import arandomroom.composeapp.generated.resources.using_items_rule
-import com.kmp.arandomroom.domain.model.ActionDTO
-import com.kmp.arandomroom.domain.model.ActionDTO.Companion.getActionType
-import com.kmp.arandomroom.data.model.ActionType
+import arandomroom.composeapp.generated.resources.error_message
 import com.kmp.arandomroom.domain.GameManagementUseCase
 import com.kmp.arandomroom.domain.model.RoomDTO
 import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.domain.GenerationUseCase
+import com.kmp.arandomroom.domain.model.ObjectDTO
 import com.kmp.arandomroom.domain.model.ItemDTO
 import com.kmp.arandomroom.domain.model.MoveDTO
+import com.kmp.arandomroom.utils.joinSerializedObjects
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -36,6 +35,7 @@ class RoomViewModel(
             val gameState = gameManagementUseCase.getGameState(gameId)
             val inventory = gameManagementUseCase.getGameInventory(gameId)
             val currentRoom = gameManagementUseCase.getRoom(gameId, gameState.currentRoom)
+            gameManagementUseCase.getAllRooms(gameId)
             _uiState.value = _uiState.value.copy(
                 gameId = gameId,
                 isLoading = false,
@@ -54,36 +54,29 @@ class RoomViewModel(
         viewModelScope.launch {
             var prompt = getString(
                 Res.string.validate_action_prompt,
+                action,
+                currentRoom.moves.joinSerializedObjects(MoveDTO.serializer()),
+                currentRoom.items.joinSerializedObjects(ItemDTO.serializer()),
+                currentRoom.objects.joinSerializedObjects(ObjectDTO.serializer()),
+                _uiState.value.inventory.joinSerializedObjects(ItemDTO.serializer()),
                 currentRoom.description,
-                currentRoom.moves.joinToString(", ") {
-                    Json.encodeToString(MoveDTO.serializer(), it)
-                },
-                currentRoom.actions.joinToString(", ") {
-                    Json.encodeToString(ActionDTO.serializer(), it)
-                },
-                _uiState.value.inventory.joinToString(", ") {
-                    Json.encodeToString(ItemDTO.serializer(), it)
-                },
-                action
             )
-            prompt = addRules(prompt)
-            val errorMessage = Json.encodeToString(
-                serializer = ValidatedAction.serializer(),
-                value = ValidatedAction.getErrorMessage()
-            )
-            val response = generationUseCase.generateResponse(prompt, errorMessage)
-            if (response != null) {
-                println("qwerty $response")
-                val validatedAction = Json.decodeFromString<ValidatedAction>(response)
-                performAction(currentRoom, validatedAction)
+            print("qwerty prompt: $prompt")
+            val errorMessage = getString(Res.string.error_message)
+            try {
+                val response = generationUseCase.generateResponse(prompt)
+                if (response != null) {
+                    val validatedAction = Json.decodeFromString<ValidatedAction>(response)
+                    performAction(currentRoom, validatedAction)
+                }
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    actionFeedback = errorMessage
+                )
             }
         }
-    }
 
-    private suspend fun addRules(prompt: String): String {
-        return "$prompt Rules: ${
-            getString(Res.string.using_items_rule)
-        }"
     }
 
     private suspend fun performAction(
@@ -100,46 +93,73 @@ class RoomViewModel(
                 isLoading = false,
                 actionFeedback = feedback
             )
+            return
         }
 
-        validatedAction.actionId?.let { actionId ->
-            currentRoom.moves.firstOrNull { it.id == actionId }?.let { moveDTO ->
-                performMove(moveDTO, feedback)
-            }
-
-            currentRoom.actions.firstOrNull { it.id == actionId }?.let { actionDTO ->
-                when (actionDTO.getActionType()) {
-                    ActionType.PICK_UP -> {
-                        actionDTO.itemId?.let { itemId ->
-                            currentRoom.items.find { it.id == itemId }
-                        }?.let { itemDTO ->
-                            _uiState.value = _uiState.value.copy(
-                                isLoading = false,
-                                actionFeedback = feedback,
-                                inventory = _uiState.value.inventory.plus(itemDTO)
-                            )
-                        }
-                    }
-
-                    else -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            actionFeedback = feedback
-                        )
-                    }
-                }
-            }
+        currentRoom.moves.firstOrNull { it.id == validatedAction.actionId }?.let { moveDTO ->
+            performMove(moveDTO, feedback)
+            return
         }
+
+        currentRoom.items.forEach {
+            println("qwerty item: $it")
+        }
+        currentRoom.items.firstOrNull { it.id == validatedAction.actionId }?.let { itemDTO ->
+            performPickUp(itemDTO, feedback)
+            return
+        }
+
+        currentRoom.objects.firstOrNull { it.id == validatedAction.actionId }?.let { objectDTO ->
+            performObjectInteraction(objectDTO, feedback)
+            return
+        }
+
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            actionFeedback = getString(Res.string.error_message)
+        )
     }
 
     private suspend fun performMove(move: MoveDTO, feedback: String) {
-        gameManagementUseCase.setRoomIsVisited(_uiState.value.currentRoom.id)
-        val nextRoom = gameManagementUseCase.getRoom(_uiState.value.gameId, move.roomDestinationId)
+        println("qwerty performing move $move, $feedback")
+        val nextRoom = gameManagementUseCase.getRoom(
+            gameId = _uiState.value.gameId,
+            roomId = move.roomDestinationId
+        )
         _uiState.value = _uiState.value.copy(
             isLoading = false,
             currentRoom = nextRoom,
             actionFeedback = feedback
         )
-        gameManagementUseCase.updateGameState(_uiState.value.gameId, nextRoom.id)
+        gameManagementUseCase.setRoomIsVisited(_uiState.value.currentRoom.id)
+        gameManagementUseCase.updateGameState(
+            gameId = _uiState.value.gameId,
+            currentRoomId = nextRoom.id
+        )
+    }
+
+    private suspend fun performPickUp(item: ItemDTO, feedback: String) {
+        println("qwerty picking up $item, $feedback")
+        gameManagementUseCase.setItemIsInInventory(item.id)
+        val inventory = gameManagementUseCase.getGameInventory(_uiState.value.gameId)
+        val currentRoom = gameManagementUseCase.getRoom(
+            gameId = _uiState.value.gameId,
+            roomId = _uiState.value.currentRoom.id
+        )
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            currentRoom = currentRoom,
+            inventory = inventory,
+            actionFeedback = feedback
+        )
+    }
+
+    private fun performObjectInteraction(objectDTO: ObjectDTO, feedback: String) {
+        println("qwerty interacting with $objectDTO, $feedback")
+        // todo: don't trust ai, validate object interaction
+        _uiState.value = _uiState.value.copy(
+            isLoading = false,
+            actionFeedback = feedback
+        )
     }
 }

@@ -21,7 +21,7 @@ class GenerationUseCase(
         }
     )
 
-    suspend fun generateResponse(prompt: String, errorResponse: String?): String? {
+    suspend fun generateResponse(prompt: String): String? {
         val inputContent = content { text(prompt) }
 
         return try {
@@ -29,7 +29,7 @@ class GenerationUseCase(
             response
         } catch (e: Exception) {
             println("qwerty $e")
-            errorResponse
+            throw e
         }
 
     }

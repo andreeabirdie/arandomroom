@@ -26,7 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.icon_arrow_back
+import arandomroom.composeapp.generated.resources.icon_backpack
 import arandomroom.composeapp.generated.resources.icon_send
+import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.ui.screens.composables.LoadingSquaresAnimation
 import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
@@ -42,6 +44,7 @@ fun RoomScreen(
     viewModel: RoomViewModel = koinViewModel<RoomViewModel> { parametersOf(gameId) }
 ) {
     val gameState = viewModel.uiState.collectAsState()
+    val showInventory = remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -54,22 +57,30 @@ fun RoomScreen(
             LoadingSquaresAnimation(squareSize = 40f)
         } else {
             val prompt = remember { mutableStateOf("") }
-            val roomAnimationOngoing = remember { mutableStateOf(false) }
-            val feedbackAnimationOngoing = remember { mutableStateOf(false) }
 
             if (gameState.value.currentRoom.id == gameState.value.endRoom) {
                 onEndGame()
             }
 
-            IconButton(
-                modifier = Modifier.align(Alignment.Start),
-                onClick = onExitGame
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Icon(
-                    imageVector = vectorResource(Res.drawable.icon_arrow_back),
-                    tint = MaterialTheme.colorScheme.primary,
-                    contentDescription = "Exit game",
-                )
+                IconButton(onClick = onExitGame) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.icon_arrow_back),
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = "Exit game",
+                    )
+                }
+
+                IconButton(onClick = { showInventory.value = true }) {
+                    Icon(
+                        imageVector = vectorResource(Res.drawable.icon_backpack),
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = "Inventory",
+                    )
+                }
             }
 
             Column(
@@ -84,11 +95,10 @@ fun RoomScreen(
                     text = gameState.value.currentRoom.name,
                     style = MaterialTheme.typography.titleSmall
                 )
-                Spacer(modifier = Modifier.height(30.dp))
                 AnimatedText(
+                    modifier = Modifier.padding(top = 30.dp),
                     text = gameState.value.currentRoom.description,
-                    style = MaterialTheme.typography.titleMedium,
-                    onAnimationOngoingChanged = { roomAnimationOngoing.value = it },
+                    style = MaterialTheme.typography.titleMedium
                 )
             }
 
@@ -97,9 +107,8 @@ fun RoomScreen(
                     LoadingSquaresAnimation(squareSize = 20f, isCentered = false)
                 } else {
                     AnimatedText(
-                        gameState.value.actionFeedback,
-                        style = MaterialTheme.typography.titleSmall,
-                        onAnimationOngoingChanged = { feedbackAnimationOngoing.value = it },
+                        text = gameState.value.actionFeedback,
+                        style = MaterialTheme.typography.titleSmall
                     )
                 }
                 Spacer(modifier = Modifier.height(20.dp))
@@ -130,6 +139,13 @@ fun RoomScreen(
                     }
                 }
             }
+        }
+
+        if (showInventory.value) {
+            InventoryDialog(
+                inventoryItems = gameState.value.inventory,
+                onDismiss = { showInventory.value = false }
+            )
         }
     }
 }

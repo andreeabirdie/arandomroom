@@ -19,13 +19,13 @@ data class ValidatedAction(
                 properties = mapOf(
                     "actionId" to Schema(
                         name = "action",
-                        description = "Id of the identified action to be performed",
+                        description = "Id of the move, item to be picked up, or object to be interacted with. Use null for invalid actions.",
                         type = FunctionType.STRING,
                         nullable = true
                     ),
                     "actionFeedback" to Schema(
                         name = "actionFeedback",
-                        description = "Feedback message for the action if it's not an existing action",
+                        description = "Feedback explaining the result of the action",
                         type = FunctionType.STRING
                     )
                 ),

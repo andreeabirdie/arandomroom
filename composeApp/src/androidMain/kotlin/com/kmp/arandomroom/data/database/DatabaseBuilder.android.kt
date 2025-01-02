@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 
 fun getDatabaseBuilder(ctx: Context): RoomDatabase.Builder<GameDatabase> {
     val appContext = ctx.applicationContext
-    val dbFile = appContext.getDatabasePath("games.db")
+    val dbFile = appContext.getDatabasePath(dbFileName)
     return Room.databaseBuilder<GameDatabase>(
         context = appContext,
         name = dbFile.absolutePath

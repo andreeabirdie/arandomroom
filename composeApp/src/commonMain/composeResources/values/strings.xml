@@ -1,12 +1,23 @@
 <resources>
+    <string name="move_description_rule">Make sure that the directions in which the user can move are mentioned in the description</string>
     <string name="start_end_parameters_rule">Make sure to set the currentRoom and endRoom ids.</string>
-    <string name="action_description_rule">Make sure that the directions in which the user can move and the items in the room are mentioned in the description</string>
-    <string name="enforce_interactable_objects_rule">Make sure that objects that can be interacted with are added as interactableObjects and mentioned in the description.</string>
-    <string name="enforce_items_rule">Make sure that the items are added as items and mentioned in the description.</string>
+    <string name="enforce_interactable_objects_rule">Make sure that objects that can be interacted with are added to the object list and mentioned in the description.</string>
+    <string name="enforce_items_rule">Make sure that items that can be picked up are added to the items list.</string>
     <string name="describing_future_room">When describing the exits in a room, don't specify where they lead.</string>
     <string name="end_room_rule">Only add description to the last room as it ends the game.</string>
+    <string name="unique_ids_rule">Make sure that all rooms, moves, objects, and items have unique ids to the game.</string>
     <string name="generate_game_prompt">Generate a %1$s themed game with the following structure.</string>
     <string name="invalid_action_feedback">You can't do that.</string>
-    <string name="using_items_rule">For an item to be used it has to exist in inventory.</string>
-    <string name="validate_action_prompt">Given the current room's description %1$s, moves %2$s, and actions: %3$s, the user's inventory %4$s and the command: '%5$s', indicate if the command corresponds to a valid action and give feedback.</string>
+    <string name="error_message">Something went wrong. Please try again.</string>
+    <string name="validate_action_prompt">The user issued the command: %1$s. Determine the action the user wants to take based on the following:
+        Move: Check if it matches a valid move from %2$s. If valid, return the move ID with confirmation feedback.
+        Pick Up: If not a move, check if the user wants to pick an item from %3$s. If yes, return the item ID with confirmation feedback.
+        Interact: If not a move or item, check if the user is trying to interact with an object from %4$s.
+        If the interaction requiredItem is null, return the object ID with confirmation feedback.
+        If it requires an item, verify its presence in inventory %5$s.
+        If present, return the object ID with confirmation feedback.
+        If not, provide feedback about the missing item.
+        Invalid: If none of the above, analyze the room description "%6$s" and provide feedback for the invalid command.
+        Respond with the given structure.
+    </string>
 </resources>
