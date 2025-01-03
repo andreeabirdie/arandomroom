@@ -8,10 +8,10 @@ import kotlinx.serialization.json.JsonObject
 
 @Serializable
 data class ItemDTO(
-    val id: String = "",
-    val name: String = "",
-    val description: String = "",
-    val descriptionOfItemPlacement: String = ""
+    val id: String,
+    val name: String,
+    val description: String,
+    val descriptionOfItemPlacement: String
 ) {
     companion object {
         fun getSchema(): Schema<JsonObject> {

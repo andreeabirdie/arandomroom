@@ -32,14 +32,16 @@ data class MoveDMO(
     val gameId: String,
     val roomId: String,
     val direction: String,
-    val roomDestinationId: String
+    val roomDestinationId: String,
+    val requiredItem: String?
 ) {
     companion object {
         fun MoveDMO.toDTO(): MoveDTO {
             return MoveDTO(
                 id = id,
                 direction = direction,
-                roomDestinationId = roomDestinationId
+                roomDestinationId = roomDestinationId,
+                requiredItem = requiredItem
             )
         }
     }

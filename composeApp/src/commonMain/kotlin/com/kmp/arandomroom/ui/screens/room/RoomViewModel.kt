@@ -122,6 +122,15 @@ class RoomViewModel(
 
     private suspend fun performMove(move: MoveDTO, feedback: String) {
         println("qwerty performing move $move, $feedback")
+        move.requiredItem?.let { item ->
+            if (!_uiState.value.inventory.any { it.id == item }) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    actionFeedback = "This way is blocked. You need an item to proceed."
+                )
+                return
+            }
+        }
         val nextRoom = gameManagementUseCase.getRoom(
             gameId = _uiState.value.gameId,
             roomId = move.roomDestinationId
@@ -156,7 +165,15 @@ class RoomViewModel(
 
     private fun performObjectInteraction(objectDTO: ObjectDTO, feedback: String) {
         println("qwerty interacting with $objectDTO, $feedback")
-        // todo: don't trust ai, validate object interaction
+        objectDTO.requiredItem?.let { item ->
+            if (!_uiState.value.inventory.any { it.id == item }) {
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    actionFeedback = "You need an item to interact with this object."
+                )
+                return
+            }
+        }
         _uiState.value = _uiState.value.copy(
             isLoading = false,
             actionFeedback = feedback

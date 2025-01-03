@@ -13,7 +13,7 @@ class GenerationUseCase(
 ) : KoinComponent {
 
     private val generativeModel = GenerativeModel(
-        modelName = "gemini-1.5-pro",
+        modelName = "gemini-1.5-flash",
         apiKey = BuildKonfig.GEMINI_API_KEY,
         generationConfig = generationConfig {
             responseMimeType = "application/json"

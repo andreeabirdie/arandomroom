@@ -40,7 +40,7 @@ data class ObjectDTO(
                     ),
                     "requiredItem" to Schema(
                         name = "requiredItem",
-                        description = "Id of the item required to interact with the object, null if no item is required",
+                        description = "Id of the item required to interact with the object, null if no item is required. When adding a required item, make sure to also add the an item with the same id to a room in the game the user can reach.",
                         type = FunctionType.STRING,
                         nullable = true
                     )
