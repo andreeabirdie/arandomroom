@@ -13,7 +13,6 @@ data class RoomDTO(
     val description: String,
     val isVisited: Boolean,
     val items: List<ItemDTO>,
-    val objects: List<ObjectDTO>,
     val moves: List<MoveDTO>
 ) {
     companion object {
@@ -60,24 +59,9 @@ data class RoomDTO(
                         type = FunctionType.ARRAY,
                         items = ItemDTO.getSchema(),
                         nullable = false
-                    ),
-                    "objects" to Schema(
-                        name = "objects",
-                        description = "List of interactable objects in the room",
-                        type = FunctionType.ARRAY,
-                        items = ObjectDTO.getSchema(),
-                        nullable = false
                     )
                 ),
-                required = listOf(
-                    "id",
-                    "name",
-                    "description",
-                    "isVisited",
-                    "moves",
-                    "items",
-                    "objects"
-                )
+                required = listOf("id", "name", "description", "isVisited", "moves", "items")
             )
         }
 

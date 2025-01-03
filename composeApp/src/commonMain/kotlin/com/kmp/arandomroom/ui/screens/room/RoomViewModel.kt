@@ -10,7 +10,6 @@ import com.kmp.arandomroom.domain.GameManagementUseCase
 import com.kmp.arandomroom.domain.model.RoomDTO
 import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.domain.GenerationUseCase
-import com.kmp.arandomroom.domain.model.ObjectDTO
 import com.kmp.arandomroom.domain.model.ItemDTO
 import com.kmp.arandomroom.domain.model.MoveDTO
 import com.kmp.arandomroom.utils.joinSerializedObjects
@@ -52,14 +51,12 @@ class RoomViewModel(
         val currentRoom = _uiState.value.currentRoom
 
         viewModelScope.launch {
-            var prompt = getString(
+            val prompt = getString(
                 Res.string.validate_action_prompt,
                 action,
                 currentRoom.moves.joinSerializedObjects(MoveDTO.serializer()),
                 currentRoom.items.joinSerializedObjects(ItemDTO.serializer()),
-                currentRoom.objects.joinSerializedObjects(ObjectDTO.serializer()),
-                _uiState.value.inventory.joinSerializedObjects(ItemDTO.serializer()),
-                currentRoom.description,
+                currentRoom.description
             )
             print("qwerty prompt: $prompt")
             val errorMessage = getString(Res.string.error_message)
@@ -109,11 +106,6 @@ class RoomViewModel(
             return
         }
 
-        currentRoom.objects.firstOrNull { it.id == validatedAction.actionId }?.let { objectDTO ->
-            performObjectInteraction(objectDTO, feedback)
-            return
-        }
-
         _uiState.value = _uiState.value.copy(
             isLoading = false,
             actionFeedback = getString(Res.string.error_message)
@@ -159,23 +151,6 @@ class RoomViewModel(
             isLoading = false,
             currentRoom = currentRoom,
             inventory = inventory,
-            actionFeedback = feedback
-        )
-    }
-
-    private fun performObjectInteraction(objectDTO: ObjectDTO, feedback: String) {
-        println("qwerty interacting with $objectDTO, $feedback")
-        objectDTO.requiredItem?.let { item ->
-            if (!_uiState.value.inventory.any { it.id == item }) {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    actionFeedback = "You need an item to interact with this object."
-                )
-                return
-            }
-        }
-        _uiState.value = _uiState.value.copy(
-            isLoading = false,
             actionFeedback = feedback
         )
     }

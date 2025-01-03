@@ -12,8 +12,7 @@
     <string name="validate_action_prompt">The user issued the command: %1$s. Determine the action the user wants to take based on the following:
         Move: Check if it matches a valid move from %2$s. If valid, return the move ID with confirmation feedback.
         Pick Up: If not a move, check if the user wants to pick an item from %3$s. If yes, return the item ID with confirmation feedback.
-        Interact: If not a move or item, check if the user is trying to interact with an object from %4$s and return the object ID with confirmation feedback.
-        Invalid: If none of the above, analyze the room description "%6$s" and provide feedback for the invalid command.
+        Invalid: If none of the above, analyze the room description "%4$s" and provide feedback for the invalid command.
         Respond with the given structure.
     </string>
 </resources>

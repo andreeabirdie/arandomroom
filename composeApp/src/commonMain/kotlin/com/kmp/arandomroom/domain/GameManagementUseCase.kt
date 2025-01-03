@@ -1,18 +1,14 @@
 package com.kmp.arandomroom.domain
 
 import com.kmp.arandomroom.data.model.GameStateDMO
-import com.kmp.arandomroom.data.model.ObjectDMO.Companion.toDTO
 import com.kmp.arandomroom.data.model.ItemDMO.Companion.toDTO
 import com.kmp.arandomroom.data.model.MoveDMO.Companion.toDTO
-import com.kmp.arandomroom.data.model.RoomDMO
 import com.kmp.arandomroom.data.model.RoomDMO.Companion.toDTO
 import com.kmp.arandomroom.data.repository.GameRepository
-import com.kmp.arandomroom.data.repository.ObjectRepository
 import com.kmp.arandomroom.data.repository.ItemRepository
 import com.kmp.arandomroom.data.repository.MoveRepository
 import com.kmp.arandomroom.data.repository.RoomRepository
 import com.kmp.arandomroom.domain.model.GeneratedGame
-import com.kmp.arandomroom.domain.model.ObjectDTO.Companion.toDMO
 import com.kmp.arandomroom.domain.model.ItemDTO
 import com.kmp.arandomroom.domain.model.RoomDTO.Companion.toDMO
 import com.kmp.arandomroom.domain.model.ItemDTO.Companion.toDMO
@@ -23,7 +19,6 @@ class GameManagementUseCase(
     private val gameRepository: GameRepository,
     private val roomRepository: RoomRepository,
     private val itemRepository: ItemRepository,
-    private val objectRepository: ObjectRepository,
     private val moveRepository: MoveRepository
 ) {
 
@@ -50,15 +45,6 @@ class GameManagementUseCase(
         }
 
         generatedGame.rooms.forEach { room ->
-            room.objects.forEach { objectDTO ->
-                objectRepository.insertObject(
-                    objectDTO.toDMO(
-                        gameId = gameId,
-                        roomId = room.id
-                    )
-                )
-            }
-
             room.moves.forEach { move ->
                 moveRepository.insertMove(
                     move.toDMO(
@@ -112,11 +98,6 @@ class GameManagementUseCase(
             gameId = roomId
         ).map { it.toDTO() }
 
-        val objects = objectRepository.getAllObjectsForRoom(
-            roomId = gameId,
-            gameId = roomId
-        ).map { it.toDTO() }
-
         val moves = moveRepository.getMovesForRoom(
             gameId = gameId,
             roomId = roomId
@@ -124,8 +105,7 @@ class GameManagementUseCase(
 
         return room.toDTO(
             moves = moves,
-            items = items,
-            objects = objects
+            items = items
         )
     }
 }

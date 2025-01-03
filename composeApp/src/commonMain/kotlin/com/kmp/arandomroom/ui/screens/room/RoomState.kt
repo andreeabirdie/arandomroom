@@ -22,8 +22,7 @@ data class RoomState(
                     moves = emptyList(),
                     name = "",
                     isVisited = false,
-                    items = emptyList(),
-                    objects = emptyList()
+                    items = emptyList()
                 ),
                 endRoom = "",
                 inventory = emptyList(),
