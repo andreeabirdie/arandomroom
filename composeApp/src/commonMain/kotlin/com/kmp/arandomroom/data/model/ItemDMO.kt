@@ -33,7 +33,6 @@ data class ItemDMO(
     val roomId: String,
     val name: String,
     val description: String,
-    val descriptionOfItemPlacement: String,
     val isInInventory: Boolean
 ) {
     companion object {
@@ -42,7 +41,6 @@ data class ItemDMO(
                 id = id,
                 name = name,
                 description = description,
-                descriptionOfItemPlacement = descriptionOfItemPlacement
             )
         }
     }

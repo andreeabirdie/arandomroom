@@ -23,7 +23,7 @@ import kotlinx.coroutines.IO
         ItemDMO::class,
         MoveDMO::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @ConstructedBy(GameDatabaseConstructor::class)
@@ -41,7 +41,7 @@ expect object GameDatabaseConstructor : RoomDatabaseConstructor<GameDatabase> {
 
 fun getRoomDatabase(builder: RoomDatabase.Builder<GameDatabase>): GameDatabase {
     return builder
-        .fallbackToDestructiveMigrationOnDowngrade(dropAllTables = true)
+        .fallbackToDestructiveMigration(dropAllTables = true)
         .setDriver(BundledSQLiteDriver())
         .setQueryCoroutineContext(Dispatchers.IO)
         .build()

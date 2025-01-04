@@ -20,11 +20,25 @@ import com.kmp.arandomroom.domain.model.MoveDTO
             parentColumns = ["id"],
             childColumns = ["roomId"],
             onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = RoomDMO::class,
+            parentColumns = ["id"],
+            childColumns = ["roomDestinationId"],
+            onDelete = ForeignKey.CASCADE
+        ),
+        ForeignKey(
+            entity = ItemDMO::class,
+            parentColumns = ["id"],
+            childColumns = ["requiredItem"],
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
         Index(value = ["gameId"]),
         Index(value = ["roomId"]),
+        Index(value = ["roomDestinationId"]),
+        Index(value = ["requiredItem"]),
     ]
 )
 data class MoveDMO(

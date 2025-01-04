@@ -5,10 +5,8 @@ import androidx.lifecycle.viewModelScope
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.unique_ids_rule
 import arandomroom.composeapp.generated.resources.move_description_rule
-import arandomroom.composeapp.generated.resources.enforce_interactable_objects_rule
 import arandomroom.composeapp.generated.resources.enforce_items_rule
 import arandomroom.composeapp.generated.resources.generate_game_prompt
-import arandomroom.composeapp.generated.resources.start_end_parameters_rule
 import arandomroom.composeapp.generated.resources.describing_future_room
 import arandomroom.composeapp.generated.resources.error_message
 import com.kmp.arandomroom.domain.GameManagementUseCase
@@ -28,14 +26,7 @@ class MenuViewModel(
     private val gameManagementUseCase: GameManagementUseCase
 ) : ViewModel(), KoinComponent {
 
-    private val _uiState = MutableStateFlow(
-        MenuState(
-            isLoading = true,
-            games = emptyList(),
-            generatedGameId = null,
-            error = null
-        )
-    )
+    private val _uiState = MutableStateFlow(MenuState.getDefaultState())
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -73,6 +64,7 @@ class MenuViewModel(
                 val response = generationUseCase.generateResponse(prompt)
                 if (response != null) {
                     val generatedGame = Json.decodeFromString(GeneratedGame.serializer(), response)
+                    println("qwerty generatedGame: $generatedGame")
                     val gameId = Uuid.random().toString()
                     gameManagementUseCase.insertGame(gameId, generatedGame)
                     _uiState.value = _uiState.value.copy(
@@ -90,10 +82,6 @@ class MenuViewModel(
 
     private suspend fun addRules(prompt: String): String {
         return "$prompt Rules: ${
-            getString(Res.string.start_end_parameters_rule)
-        } ${
-            getString(Res.string.enforce_interactable_objects_rule)
-        } ${
             getString(Res.string.move_description_rule)
         } ${
             getString(Res.string.describing_future_room)

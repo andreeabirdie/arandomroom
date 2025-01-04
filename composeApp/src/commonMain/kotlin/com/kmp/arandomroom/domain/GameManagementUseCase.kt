@@ -87,16 +87,17 @@ class GameManagementUseCase(
     suspend fun getAllRooms(gameId: String) {
         val rooms = roomRepository.getAllRoomsForGame(gameId)
         rooms.forEach { room ->
-             println("qwerty room: ${getRoom(gameId, room.id)}")
+             println("qwerty room ${room.id}: ${getRoom(gameId, room.id)}")
         }
     }
 
     suspend fun getRoom(gameId: String, roomId: String): RoomDTO {
         val room = roomRepository.getRoom(roomId)
         val items = itemRepository.getAllItemsForRoom(
-            roomId = gameId,
-            gameId = roomId
+            roomId = roomId,
+            gameId = gameId
         ).map { it.toDTO() }
+        println("qwerty $roomId $items")
 
         val moves = moveRepository.getMovesForRoom(
             gameId = gameId,

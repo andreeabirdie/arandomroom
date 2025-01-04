@@ -10,8 +10,7 @@ import kotlinx.serialization.json.JsonObject
 data class ItemDTO(
     val id: String,
     val name: String,
-    val description: String,
-    val descriptionOfItemPlacement: String
+    val description: String
 ) {
     companion object {
         fun getSchema(): Schema<JsonObject> {
@@ -37,15 +36,9 @@ data class ItemDTO(
                         description = "Description of the item",
                         type = FunctionType.STRING,
                         nullable = false
-                    ),
-                    "descriptionOfItemPlacement" to Schema(
-                        name = "descriptionOfItemPlacement",
-                        description = "Description of where the item is placed in the room e.g 'There is a key on the rug'",
-                        type = FunctionType.STRING,
-                        nullable = false
                     )
                 ),
-                required = listOf("id", "name", "description", "descriptionOfItemPlacement")
+                required = listOf("id", "name", "description")
             )
         }
 
@@ -60,7 +53,6 @@ data class ItemDTO(
                 roomId = roomId,
                 name = name,
                 description = description,
-                descriptionOfItemPlacement = descriptionOfItemPlacement,
                 isInInventory = isInInventory
             )
         }

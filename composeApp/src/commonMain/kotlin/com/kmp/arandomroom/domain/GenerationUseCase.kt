@@ -29,6 +29,7 @@ class GenerationUseCase(
             response
         } catch (e: Exception) {
             println("qwerty $e")
+            println("qwerty ${e.cause?.message}")
             throw e
         }
 

@@ -81,7 +81,7 @@ fun MenuContent(
             )
             FilledTonalButton(
                 modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp),
-                enabled = !uiState.isLoading,
+                enabled = prompt.isNotEmpty(),
                 onClick = onGenerate
             ) {
                 Text(text = "Generate a new adventure")

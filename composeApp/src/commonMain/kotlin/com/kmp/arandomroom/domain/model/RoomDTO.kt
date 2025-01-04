@@ -36,7 +36,7 @@ data class RoomDTO(
                     ),
                     "description" to Schema(
                         name = "description",
-                        description = "Description of the room. Don't include items and their placement in this description",
+                        description = "Description of the room.",
                         type = FunctionType.STRING,
                         nullable = false
                     ),
@@ -55,7 +55,7 @@ data class RoomDTO(
                     ),
                     "items" to Schema(
                         name = "items",
-                        description = "List of items in the room. Make sure to add any items that can be pick up here.",
+                        description = "List of items in the room. Make sure to add any items that can be picked up here.",
                         type = FunctionType.ARRAY,
                         items = ItemDTO.getSchema(),
                         nullable = false

@@ -56,7 +56,8 @@ class RoomViewModel(
                 action,
                 currentRoom.moves.joinSerializedObjects(MoveDTO.serializer()),
                 currentRoom.items.joinSerializedObjects(ItemDTO.serializer()),
-                currentRoom.description
+                currentRoom.description,
+                _uiState.value.inventory.joinSerializedObjects(ItemDTO.serializer()),
             )
             print("qwerty prompt: $prompt")
             val errorMessage = getString(Res.string.error_message)
@@ -108,7 +109,7 @@ class RoomViewModel(
 
         _uiState.value = _uiState.value.copy(
             isLoading = false,
-            actionFeedback = getString(Res.string.error_message)
+            actionFeedback = getString(Res.string.invalid_action_feedback)
         )
     }
 

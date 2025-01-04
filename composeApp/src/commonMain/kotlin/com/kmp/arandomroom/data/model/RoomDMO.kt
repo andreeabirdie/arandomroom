@@ -30,16 +30,12 @@ data class RoomDMO(
             moves: List<MoveDTO>,
             items: List<ItemDTO>
         ): RoomDTO {
-            val displayableDescription = description
-            items.forEach { item ->
-                println("qwerty item: $item")
-                displayableDescription + " " + item.descriptionOfItemPlacement
-            }
-
+            println("qwerty toDTO $id $moves")
+            println("qwerty toDTO $id $items")
             return RoomDTO(
                 id = id,
                 name = name,
-                description = displayableDescription,
+                description = description,
                 isVisited = isVisited,
                 moves = moves,
                 items = items
