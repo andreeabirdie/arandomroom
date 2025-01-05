@@ -30,8 +30,6 @@ data class RoomDMO(
             moves: List<MoveDTO>,
             items: List<ItemDTO>
         ): RoomDTO {
-            println("qwerty toDTO $id $moves")
-            println("qwerty toDTO $id $items")
             return RoomDTO(
                 id = id,
                 name = name,

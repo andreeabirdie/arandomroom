@@ -74,7 +74,12 @@ class RoomViewModel(
                 )
             }
         }
+    }
 
+    fun resetGame() {
+        viewModelScope.launch {
+            gameManagementUseCase.resetGame(_uiState.value.gameId)
+        }
     }
 
     private suspend fun performAction(
@@ -115,6 +120,7 @@ class RoomViewModel(
 
     private suspend fun performMove(move: MoveDTO, feedback: String) {
         println("qwerty performing move $move, $feedback")
+        var moveFeedback = feedback
         move.requiredItem?.let { item ->
             if (!_uiState.value.inventory.any { it.id == item }) {
                 _uiState.value = _uiState.value.copy(
@@ -128,13 +134,18 @@ class RoomViewModel(
             gameId = _uiState.value.gameId,
             roomId = move.roomDestinationId
         )
+
+        if (nextRoom.id == _uiState.value.endRoom) {
+            moveFeedback = moveFeedback.plus(" Congratulations! You have reached the end of the game.")
+        }
+
         _uiState.value = _uiState.value.copy(
             isLoading = false,
             currentRoom = nextRoom,
-            actionFeedback = feedback
+            actionFeedback = moveFeedback
         )
-        gameManagementUseCase.setRoomIsVisited(_uiState.value.currentRoom.id)
-        gameManagementUseCase.updateGameState(
+        gameManagementUseCase.setRoomIsVisited(_uiState.value.currentRoom.id, true)
+        gameManagementUseCase.setCurrentRoom(
             gameId = _uiState.value.gameId,
             currentRoomId = nextRoom.id
         )
@@ -142,7 +153,7 @@ class RoomViewModel(
 
     private suspend fun performPickUp(item: ItemDTO, feedback: String) {
         println("qwerty picking up $item, $feedback")
-        gameManagementUseCase.setItemIsInInventory(item.id)
+        gameManagementUseCase.setItemIsInInventory(item.id, true)
         val inventory = gameManagementUseCase.getGameInventory(_uiState.value.gameId)
         val currentRoom = gameManagementUseCase.getRoom(
             gameId = _uiState.value.gameId,

@@ -15,8 +15,8 @@ class ItemRepository(gameDatabase: GameDatabase) {
         return itemDao.getInventoryItemsForGame(gameId)
     }
 
-    suspend fun setItemIsInInventory(itemId: String) {
-        itemDao.setItemIsInInventory(itemId)
+    suspend fun setItemIsInInventory(itemId: String, isInInventory: Boolean) {
+        itemDao.setItemIsInInventory(itemId, isInInventory)
     }
 
     suspend fun insertItem(item: ItemDMO) {

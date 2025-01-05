@@ -15,8 +15,8 @@ interface RoomDao {
     @Query("SELECT * FROM rooms WHERE id = :roomId")
     suspend fun getRoom(roomId: String): RoomDMO
 
-    @Query("UPDATE rooms SET isVisited = true WHERE id = :roomId")
-    suspend fun setRoomIsVisited(roomId: String)
+    @Query("UPDATE rooms SET isVisited = :isVisited WHERE id = :roomId")
+    suspend fun setRoomIsVisited(roomId: String, isVisited: Boolean)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createRoom(room: RoomDMO)

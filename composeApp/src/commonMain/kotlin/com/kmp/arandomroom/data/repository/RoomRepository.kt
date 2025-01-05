@@ -13,5 +13,7 @@ class RoomRepository(gameDatabase: GameDatabase) {
 
     suspend fun insertRoom(roomDMO: RoomDMO) = roomDao.createRoom(roomDMO)
 
-    suspend fun setRoomIsVisited(roomId: String) = roomDao.setRoomIsVisited(roomId)
+    suspend fun setRoomIsVisited(roomId: String, isVisited: Boolean) {
+        roomDao.setRoomIsVisited(roomId, isVisited)
+    }
 }

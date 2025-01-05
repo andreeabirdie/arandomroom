@@ -28,7 +28,8 @@ class GameManagementUseCase(
                 id = gameId,
                 title = generatedGame.title,
                 currentRoom = generatedGame.currentRoom,
-                endRoom = generatedGame.endRoom
+                endRoom = generatedGame.endRoom,
+                initialRoom = generatedGame.currentRoom
             )
         )
         generatedGame.rooms.forEach { room ->
@@ -56,6 +57,16 @@ class GameManagementUseCase(
         }
     }
 
+    suspend fun resetGame(gameId: String) {
+        val rooms = roomRepository.getAllRoomsForGame(gameId)
+        val game = gameRepository.getGameById(gameId)
+        val items = itemRepository.getInventoryItemsForGame(gameId)
+
+        rooms.forEach { room -> setRoomIsVisited(room.id, false) }
+        setCurrentRoom(gameId, game.initialRoom)
+        items.forEach { item -> setItemIsInInventory(item.id, false) }
+    }
+
     suspend fun getAllGames(): List<GameStateDMO> {
         return gameRepository.getAllGames()
     }
@@ -64,19 +75,19 @@ class GameManagementUseCase(
         gameRepository.deleteGame(gameId)
     }
 
-    suspend fun setRoomIsVisited(roomId: String) {
-        roomRepository.setRoomIsVisited(roomId)
+    suspend fun setRoomIsVisited(roomId: String, isVisited: Boolean) {
+        roomRepository.setRoomIsVisited(roomId, isVisited)
     }
 
-    suspend fun setItemIsInInventory(itemId: String) {
-        itemRepository.setItemIsInInventory(itemId)
+    suspend fun setItemIsInInventory(itemId: String, isInInventory: Boolean) {
+        itemRepository.setItemIsInInventory(itemId, isInInventory)
     }
 
     suspend fun getGameState(gameId: String): GameStateDMO {
         return gameRepository.getGameById(gameId)
     }
 
-    suspend fun updateGameState(gameId: String, currentRoomId: String) {
+    suspend fun setCurrentRoom(gameId: String, currentRoomId: String) {
         gameRepository.updateGameState(gameId, currentRoomId)
     }
 

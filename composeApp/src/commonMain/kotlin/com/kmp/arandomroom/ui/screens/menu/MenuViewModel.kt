@@ -72,6 +72,7 @@ class MenuViewModel(
                     )
                 }
             } catch (e: Exception) {
+                println("qwerty error: $e")
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     error = getString(Res.string.error_message)

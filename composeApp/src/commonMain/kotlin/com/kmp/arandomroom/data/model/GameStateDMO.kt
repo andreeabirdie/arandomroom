@@ -8,5 +8,6 @@ data class GameStateDMO(
     @PrimaryKey val id: String,
     val title: String,
     val currentRoom: String,
-    val endRoom: String
+    val endRoom: String,
+    val initialRoom: String
 )

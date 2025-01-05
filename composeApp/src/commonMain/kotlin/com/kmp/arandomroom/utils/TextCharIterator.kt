@@ -13,7 +13,7 @@ class TextCharIterator(val text: String) : Iterator<Char> {
 
     override fun next(): Char {
         if (currentIndex < text.length) {
-            currentIndex++ // Move to the next character
+            currentIndex++
         }
         return text[currentIndex]
     }

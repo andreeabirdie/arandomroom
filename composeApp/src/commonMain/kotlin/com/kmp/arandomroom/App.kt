@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kmp.arandomroom.ui.screens.Routes
-import com.kmp.arandomroom.ui.screens.final.FinalScreen
 import com.kmp.arandomroom.ui.screens.menu.MenuScreen
 import com.kmp.arandomroom.ui.screens.room.RoomScreen
 import com.kmp.arandomroom.ui.theme.AppTheme
@@ -46,12 +45,6 @@ fun App() {
                         val gameId = backStackEntry.arguments?.getString("gameId")
                         RoomScreen(
                             gameId = gameId ?: "Unknown",
-                            onEndGame = { navController.navigate(Routes.Final.route) },
-                            onExitGame = { navController.navigate(Routes.Menu.route) }
-                        )
-                    }
-                    composable(route = Routes.Final.route) {
-                        FinalScreen(
                             onExitGame = { navController.navigate(Routes.Menu.route) }
                         )
                     }

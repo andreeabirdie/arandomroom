@@ -22,6 +22,6 @@ interface ItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createItem(item: ItemDMO)
 
-    @Query("UPDATE items SET isInInventory = 1 WHERE id = :itemId")
-    suspend fun setItemIsInInventory(itemId: String)
+    @Query("UPDATE items SET isInInventory = :isInInventory WHERE id = :itemId")
+    suspend fun setItemIsInInventory(itemId: String, isInInventory: Boolean)
 }
