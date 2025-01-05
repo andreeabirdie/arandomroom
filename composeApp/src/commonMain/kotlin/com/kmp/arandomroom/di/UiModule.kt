@@ -8,10 +8,18 @@ import org.koin.dsl.module
 
 val uiModule = module {
     viewModel<RoomViewModel> { (gameId: String) ->
-        RoomViewModel(gameId, get(named("RoomGenerationUseCase")), get())
+        RoomViewModel(
+            gameId = gameId,
+            getActionUseCase = get(named("RoomGenerationUseCase")),
+            updateRoomDescriptionUseCase = get(named("UpdateRoomDescriptionUseCase")),
+            gameManagementUseCase = get()
+        )
     }
 
     viewModel<MenuViewModel> {
-        MenuViewModel(get(named("MenuGenerationUseCase")), get())
+        MenuViewModel(
+            generationUseCase = get(named("MenuGenerationUseCase")),
+            gameManagementUseCase = get()
+        )
     }
 }

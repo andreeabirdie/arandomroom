@@ -3,15 +3,17 @@ package com.kmp.arandomroom.ui.screens.room
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arandomroom.composeapp.generated.resources.Res
-import arandomroom.composeapp.generated.resources.invalid_action_feedback
-import arandomroom.composeapp.generated.resources.validate_action_prompt
 import arandomroom.composeapp.generated.resources.error_message
+import arandomroom.composeapp.generated.resources.invalid_action_feedback
+import arandomroom.composeapp.generated.resources.update_description_prompt
+import arandomroom.composeapp.generated.resources.validate_action_prompt
 import com.kmp.arandomroom.domain.GameManagementUseCase
 import com.kmp.arandomroom.domain.model.RoomDTO
 import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.domain.GenerationUseCase
 import com.kmp.arandomroom.domain.model.ItemDTO
 import com.kmp.arandomroom.domain.model.MoveDTO
+import com.kmp.arandomroom.domain.model.RoomDescription
 import com.kmp.arandomroom.utils.joinSerializedObjects
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,10 +21,12 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import org.koin.core.component.KoinComponent
+import org.koin.core.logger.Logger
 
 class RoomViewModel(
     gameId: String,
-    private val generationUseCase: GenerationUseCase,
+    private val getActionUseCase: GenerationUseCase,
+    private val updateRoomDescriptionUseCase: GenerationUseCase,
     private val gameManagementUseCase: GameManagementUseCase
 ) : ViewModel(), KoinComponent {
 
@@ -62,7 +66,7 @@ class RoomViewModel(
             print("qwerty prompt: $prompt")
             val errorMessage = getString(Res.string.error_message)
             try {
-                val response = generationUseCase.generateResponse(prompt)
+                val response = getActionUseCase.generateResponse(prompt)
                 if (response != null) {
                     val validatedAction = Json.decodeFromString<ValidatedAction>(response)
                     performAction(currentRoom, validatedAction)
@@ -153,8 +157,10 @@ class RoomViewModel(
 
     private suspend fun performPickUp(item: ItemDTO, feedback: String) {
         println("qwerty picking up $item, $feedback")
+        gameManagementUseCase.setRoomIsVisited(_uiState.value.currentRoom.id, true)
         gameManagementUseCase.setItemIsInInventory(item.id, true)
         val inventory = gameManagementUseCase.getGameInventory(_uiState.value.gameId)
+        updateRoomDescription(item)
         val currentRoom = gameManagementUseCase.getRoom(
             gameId = _uiState.value.gameId,
             roomId = _uiState.value.currentRoom.id
@@ -165,5 +171,29 @@ class RoomViewModel(
             inventory = inventory,
             actionFeedback = feedback
         )
+    }
+
+    private suspend fun updateRoomDescription(item: ItemDTO) {
+        val prompt = getString(
+            Res.string.update_description_prompt,
+            Json.encodeToString(ItemDTO.serializer(), item),
+            _uiState.value.currentRoom.description
+        )
+
+        try {
+            val response = updateRoomDescriptionUseCase.generateResponse(prompt)
+            println("qwerty response: $response")
+            if (response != null) {
+                gameManagementUseCase.updateRoomDescription(
+                    gameId = _uiState.value.gameId,
+                    roomId = _uiState.value.currentRoom.id,
+                    description = response.trim('"')
+                )
+            }
+        } catch (e: Exception) {
+            println("qwerty $e")
+            println("qwerty ${e.cause?.message}")
+
+        }
     }
 }

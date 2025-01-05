@@ -16,4 +16,8 @@ class RoomRepository(gameDatabase: GameDatabase) {
     suspend fun setRoomIsVisited(roomId: String, isVisited: Boolean) {
         roomDao.setRoomIsVisited(roomId, isVisited)
     }
+
+    suspend fun updateRoomDescription(gameId: String, roomId: String, description: String) {
+        roomDao.updateRoomDescription(gameId, roomId, description)
+    }
 }

@@ -12,4 +12,5 @@
         Invalid: If none of the above, analyze the room description "%4$s" and inventory %5$s and provide some creative feedback for the command.
         Respond with the given structure.
     </string>
+    <string name="update_description_prompt">The user has picked up the item %1$s from the room with description %2$s. Update the description such that it does not contain the item anymore. Keep everything else the same.</string>
 </resources>

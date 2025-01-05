@@ -5,11 +5,10 @@ import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import dev.shreyaspatil.ai.client.generativeai.type.content
 import dev.shreyaspatil.ai.client.generativeai.type.generationConfig
-import kotlinx.serialization.json.JsonObject
 import org.koin.core.component.KoinComponent
 
 class GenerationUseCase(
-    schema: Schema<JsonObject>
+    schema: Schema<*>
 ) : KoinComponent {
 
     private val generativeModel = GenerativeModel(

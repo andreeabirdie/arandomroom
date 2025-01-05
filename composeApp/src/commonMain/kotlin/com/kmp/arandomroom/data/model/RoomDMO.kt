@@ -23,6 +23,7 @@ data class RoomDMO(
     val gameId: String,
     val name: String,
     val description: String,
+    val initialDescription: String,
     val isVisited: Boolean
 ) {
     companion object {

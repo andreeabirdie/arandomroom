@@ -71,6 +71,7 @@ data class RoomDTO(
                 gameId = gameId,
                 name = name,
                 description = description,
+                initialDescription = description,
                 isVisited = isVisited
             )
         }

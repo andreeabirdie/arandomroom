@@ -63,8 +63,13 @@ class GameManagementUseCase(
         val items = itemRepository.getInventoryItemsForGame(gameId)
 
         rooms.forEach { room -> setRoomIsVisited(room.id, false) }
+        rooms.forEach { room -> updateRoomDescription(gameId, room.id, room.initialDescription) }
         setCurrentRoom(gameId, game.initialRoom)
         items.forEach { item -> setItemIsInInventory(item.id, false) }
+    }
+
+    suspend fun updateRoomDescription(gameId: String, roomId: String, description: String) {
+        roomRepository.updateRoomDescription(gameId, roomId, description)
     }
 
     suspend fun getAllGames(): List<GameStateDMO> {
