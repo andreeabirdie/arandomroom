@@ -69,6 +69,8 @@ kotlin {
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
 
+            implementation(libs.napier)
+
             sourceSets.commonMain {
                 kotlin.srcDir("build/generated/ksp/metadata")
             }

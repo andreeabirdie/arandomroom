@@ -12,6 +12,7 @@ import arandomroom.composeapp.generated.resources.error_message
 import com.kmp.arandomroom.domain.GameManagementUseCase
 import com.kmp.arandomroom.domain.model.GeneratedGame
 import com.kmp.arandomroom.domain.GenerationUseCase
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -64,7 +65,7 @@ class MenuViewModel(
                 val response = generationUseCase.generateResponse(prompt)
                 if (response != null) {
                     val generatedGame = Json.decodeFromString(GeneratedGame.serializer(), response)
-                    println("qwerty generatedGame: $generatedGame")
+                    Napier.d("generatedGame: $generatedGame")
                     val gameId = Uuid.random().toString()
                     gameManagementUseCase.insertGame(gameId, generatedGame)
                     _uiState.value = _uiState.value.copy(
@@ -72,7 +73,7 @@ class MenuViewModel(
                     )
                 }
             } catch (e: Exception) {
-                println("qwerty error: $e")
+                Napier.e("$e ${e.message}")
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     error = getString(Res.string.error_message)

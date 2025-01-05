@@ -5,6 +5,7 @@ import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.Schema
 import dev.shreyaspatil.ai.client.generativeai.type.content
 import dev.shreyaspatil.ai.client.generativeai.type.generationConfig
+import io.github.aakira.napier.Napier
 import org.koin.core.component.KoinComponent
 
 class GenerationUseCase(
@@ -27,8 +28,7 @@ class GenerationUseCase(
             val response = generativeModel.generateContent(inputContent).text
             response
         } catch (e: Exception) {
-            println("qwerty $e")
-            println("qwerty ${e.cause?.message}")
+            Napier.e("$e ${e.cause?.message}")
             throw e
         }
 

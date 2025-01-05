@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.utils
+package com.kmp.arandomroom.ui.screens.room
 
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json

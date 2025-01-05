@@ -13,15 +13,13 @@ import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.domain.GenerationUseCase
 import com.kmp.arandomroom.domain.model.ItemDTO
 import com.kmp.arandomroom.domain.model.MoveDTO
-import com.kmp.arandomroom.domain.model.RoomDescription
-import com.kmp.arandomroom.utils.joinSerializedObjects
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.jetbrains.compose.resources.getString
 import org.koin.core.component.KoinComponent
-import org.koin.core.logger.Logger
 
 class RoomViewModel(
     gameId: String,
@@ -63,7 +61,7 @@ class RoomViewModel(
                 currentRoom.description,
                 _uiState.value.inventory.joinSerializedObjects(ItemDTO.serializer()),
             )
-            print("qwerty prompt: $prompt")
+            Napier.d("prompt: $prompt")
             val errorMessage = getString(Res.string.error_message)
             try {
                 val response = getActionUseCase.generateResponse(prompt)
@@ -90,7 +88,7 @@ class RoomViewModel(
         currentRoom: RoomDTO,
         validatedAction: ValidatedAction
     ) {
-        println("qwerty $validatedAction")
+        Napier.d("$validatedAction")
         val feedback = validatedAction.actionFeedback.ifEmpty {
             getString(Res.string.invalid_action_feedback)
         }
@@ -109,7 +107,7 @@ class RoomViewModel(
         }
 
         currentRoom.items.forEach {
-            println("qwerty item: $it")
+            Napier.d("item: $it")
         }
         currentRoom.items.firstOrNull { it.id == validatedAction.actionId }?.let { itemDTO ->
             performPickUp(itemDTO, feedback)
@@ -123,7 +121,7 @@ class RoomViewModel(
     }
 
     private suspend fun performMove(move: MoveDTO, feedback: String) {
-        println("qwerty performing move $move, $feedback")
+        Napier.d("performing move $move, $feedback")
         var moveFeedback = feedback
         move.requiredItem?.let { item ->
             if (!_uiState.value.inventory.any { it.id == item }) {
@@ -156,7 +154,7 @@ class RoomViewModel(
     }
 
     private suspend fun performPickUp(item: ItemDTO, feedback: String) {
-        println("qwerty picking up $item, $feedback")
+        Napier.d("picking up $item, $feedback")
         gameManagementUseCase.setRoomIsVisited(_uiState.value.currentRoom.id, true)
         gameManagementUseCase.setItemIsInInventory(item.id, true)
         val inventory = gameManagementUseCase.getGameInventory(_uiState.value.gameId)
@@ -182,7 +180,7 @@ class RoomViewModel(
 
         try {
             val response = updateRoomDescriptionUseCase.generateResponse(prompt)
-            println("qwerty response: $response")
+            Napier.d("response: $response")
             if (response != null) {
                 gameManagementUseCase.updateRoomDescription(
                     gameId = _uiState.value.gameId,
@@ -191,8 +189,7 @@ class RoomViewModel(
                 )
             }
         } catch (e: Exception) {
-            println("qwerty $e")
-            println("qwerty ${e.cause?.message}")
+            Napier.e("$e ${e.cause?.message}")
 
         }
     }
