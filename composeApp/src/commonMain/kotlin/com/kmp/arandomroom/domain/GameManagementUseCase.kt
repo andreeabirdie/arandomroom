@@ -10,10 +10,10 @@ import com.kmp.arandomroom.data.repository.MoveRepository
 import com.kmp.arandomroom.data.repository.RoomRepository
 import com.kmp.arandomroom.domain.model.GeneratedGame
 import com.kmp.arandomroom.domain.model.ItemDTO
-import com.kmp.arandomroom.domain.model.RoomDTO.Companion.toDMO
 import com.kmp.arandomroom.domain.model.ItemDTO.Companion.toDMO
 import com.kmp.arandomroom.domain.model.MoveDTO.Companion.toDMO
 import com.kmp.arandomroom.domain.model.RoomDTO
+import com.kmp.arandomroom.domain.model.RoomDTO.Companion.toDMO
 import io.github.aakira.napier.Napier
 
 class GameManagementUseCase(
@@ -76,7 +76,6 @@ class GameManagementUseCase(
             roomId = roomId,
             gameId = gameId
         ).map { it.toDTO() }
-        Napier.d("$roomId $items")
 
         val moves = moveRepository.getMovesForRoom(
             gameId = gameId,

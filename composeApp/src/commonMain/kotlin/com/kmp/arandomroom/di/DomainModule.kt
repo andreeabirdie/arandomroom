@@ -1,10 +1,10 @@
 package com.kmp.arandomroom.di
 
 import com.kmp.arandomroom.domain.GameManagementUseCase
-import com.kmp.arandomroom.domain.model.GeneratedGame
-import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.domain.GenerationUseCase
+import com.kmp.arandomroom.domain.model.GeneratedGame
 import com.kmp.arandomroom.domain.model.RoomDescription
+import com.kmp.arandomroom.domain.model.ValidatedAction
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind

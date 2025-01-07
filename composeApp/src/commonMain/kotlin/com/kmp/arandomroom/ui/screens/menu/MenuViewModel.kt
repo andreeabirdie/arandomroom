@@ -12,8 +12,8 @@ import arandomroom.composeapp.generated.resources.unique_ids_rule
 import arandomroom.composeapp.generated.resources.validate_items_prompt
 import arandomroom.composeapp.generated.resources.validate_moves_prompt
 import com.kmp.arandomroom.domain.GameManagementUseCase
-import com.kmp.arandomroom.domain.model.GeneratedGame
 import com.kmp.arandomroom.domain.GenerationUseCase
+import com.kmp.arandomroom.domain.model.GeneratedGame
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

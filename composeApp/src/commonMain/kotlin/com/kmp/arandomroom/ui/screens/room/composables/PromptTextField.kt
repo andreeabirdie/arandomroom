@@ -9,13 +9,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import arandomroom.composeapp.generated.resources.Res
+import arandomroom.composeapp.generated.resources.action_placeholder
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PromptTextField(
     isEnabled: Boolean,
     inputText: MutableState<String>,
     modifier: Modifier = Modifier,
-    placeholder: String = "Go east"
+    placeholder: String = stringResource(Res.string.action_placeholder)
 ) {
     OutlinedTextField(
         modifier = modifier

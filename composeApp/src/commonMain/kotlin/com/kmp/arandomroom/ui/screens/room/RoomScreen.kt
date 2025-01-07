@@ -29,9 +29,11 @@ import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.icon_arrow_back
 import arandomroom.composeapp.generated.resources.icon_backpack
 import arandomroom.composeapp.generated.resources.icon_send
+import arandomroom.composeapp.generated.resources.reset_game_button
 import com.kmp.arandomroom.ui.screens.composables.LoadingSquaresAnimation
 import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import com.kmp.arandomroom.ui.screens.room.composables.PromptTextField
+import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -126,7 +128,7 @@ fun RoomScreen(
                             .padding(top = 8.dp)
                             .fillMaxWidth()
                     ) {
-                        Text("Reset game and exit to menu")
+                        Text(stringResource(Res.string.reset_game_button))
                     }
                 } else {
                     Row {

@@ -17,8 +17,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGri
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +27,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import arandomroom.composeapp.generated.resources.Res
+import arandomroom.composeapp.generated.resources.game_generation_placeholder
+import arandomroom.composeapp.generated.resources.generate_new_game_title
 import arandomroom.composeapp.generated.resources.icon_logo
+import arandomroom.composeapp.generated.resources.play_existing_game_title
 import com.kmp.arandomroom.ui.screens.composables.PromptTextField
 import com.kmp.arandomroom.ui.screens.composables.fadingEdgeAnimateDpAsState
 import com.kmp.arandomroom.ui.screens.composables.leftFadingEdge
@@ -35,6 +38,7 @@ import com.kmp.arandomroom.ui.screens.composables.rightFadingEdge
 import com.kmp.arandomroom.ui.screens.menu.MenuState
 import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MenuContent(
@@ -63,28 +67,31 @@ fun MenuContent(
                 painter = painterResource(Res.drawable.icon_logo),
                 contentDescription = "A Random Room logo"
             )
+
             uiState.error?.let { errorMessage ->
                 AnimatedText(
                     modifier = Modifier.padding(vertical = 8.dp),
-                    text = uiState.error,
+                    text = errorMessage,
                     style = MaterialTheme.typography.titleSmall.copy(
                         color = MaterialTheme.colorScheme.error
                     )
                 )
             }
+
             PromptTextField(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 isEnabled = true,
                 inputText = prompt,
                 onInputChanged = onPromptChanged,
-                placeholder = "Enter a theme"
+                placeholder = stringResource(Res.string.game_generation_placeholder)
             )
+
             FilledTonalButton(
                 modifier = Modifier.padding(vertical = 20.dp, horizontal = 16.dp),
                 enabled = prompt.isNotEmpty(),
                 onClick = onGenerate
             ) {
-                Text(text = "Generate a new adventure")
+                Text(text = stringResource(Res.string.generate_new_game_title))
             }
         }
 
@@ -99,8 +106,9 @@ fun MenuContent(
                 OrDivider(modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp))
                 Text(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    text = "Return to the familiar"
+                    text = stringResource(Res.string.play_existing_game_title),
                 )
+
                 LazyHorizontalStaggeredGrid(
                     modifier = Modifier
                         .padding(vertical = 20.dp)

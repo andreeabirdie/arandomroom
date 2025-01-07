@@ -3,16 +3,18 @@ package com.kmp.arandomroom.ui.screens.room
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arandomroom.composeapp.generated.resources.Res
+import arandomroom.composeapp.generated.resources.blocked_door
+import arandomroom.composeapp.generated.resources.congratulations_message
 import arandomroom.composeapp.generated.resources.error_message
 import arandomroom.composeapp.generated.resources.invalid_action_feedback
 import arandomroom.composeapp.generated.resources.update_description_prompt
 import arandomroom.composeapp.generated.resources.validate_action_prompt
 import com.kmp.arandomroom.domain.GameManagementUseCase
-import com.kmp.arandomroom.domain.model.RoomDTO
-import com.kmp.arandomroom.domain.model.ValidatedAction
 import com.kmp.arandomroom.domain.GenerationUseCase
 import com.kmp.arandomroom.domain.model.ItemDTO
 import com.kmp.arandomroom.domain.model.MoveDTO
+import com.kmp.arandomroom.domain.model.RoomDTO
+import com.kmp.arandomroom.domain.model.ValidatedAction
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -62,6 +64,7 @@ class RoomViewModel(
                 _uiState.value.inventory.joinSerializedObjects(ItemDTO.serializer()),
             )
             Napier.d("prompt: $prompt")
+
             try {
                 val response = getActionUseCase.generateResponse(prompt)
                 if (response != null) {
@@ -123,7 +126,7 @@ class RoomViewModel(
             if (!_uiState.value.inventory.any { it.id == item }) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    actionFeedback = "This way is blocked. You need an item to proceed."
+                    actionFeedback = getString(Res.string.blocked_door)
                 )
                 return
             }
@@ -135,7 +138,7 @@ class RoomViewModel(
 
         if (nextRoom.id == _uiState.value.endRoom) {
             moveFeedback =
-                moveFeedback.plus(" Congratulations! You have reached the end of the game.")
+                moveFeedback.plus(getString(Res.string.congratulations_message))
         }
 
         _uiState.value = _uiState.value.copy(
@@ -152,14 +155,17 @@ class RoomViewModel(
 
     private suspend fun performPickUp(item: ItemDTO, feedback: String) {
         Napier.d("picking up $item, $feedback")
+
         gameManagementUseCase.setRoomIsVisited(_uiState.value.currentRoom.id, true)
         gameManagementUseCase.setItemIsInInventory(item.id, true)
-        val inventory = gameManagementUseCase.getGameInventory(_uiState.value.gameId)
         updateRoomDescription(item)
+
+        val inventory = gameManagementUseCase.getGameInventory(_uiState.value.gameId)
         val currentRoom = gameManagementUseCase.getRoom(
             gameId = _uiState.value.gameId,
             roomId = _uiState.value.currentRoom.id
         )
+
         _uiState.value = _uiState.value.copy(
             isLoading = false,
             currentRoom = currentRoom,
