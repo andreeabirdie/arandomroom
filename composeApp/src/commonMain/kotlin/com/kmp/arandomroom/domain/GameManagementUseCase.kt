@@ -23,6 +23,10 @@ class GameManagementUseCase(
     private val moveRepository: MoveRepository
 ) {
 
+    suspend fun getAllGames(): List<GameStateDMO> {
+        return gameRepository.getAllGames()
+    }
+
     suspend fun insertGame(gameId: String, generatedGame: GeneratedGame) {
         gameRepository.insertGame(
             GameStateDMO(
@@ -58,43 +62,8 @@ class GameManagementUseCase(
         }
     }
 
-    suspend fun resetGame(gameId: String) {
-        val rooms = roomRepository.getAllRoomsForGame(gameId)
-        val game = gameRepository.getGameById(gameId)
-        val items = itemRepository.getInventoryItemsForGame(gameId)
-
-        rooms.forEach { room -> setRoomIsVisited(room.id, false) }
-        rooms.forEach { room -> updateRoomDescription(gameId, room.id, room.initialDescription) }
-        setCurrentRoom(gameId, game.initialRoom)
-        items.forEach { item -> setItemIsInInventory(item.id, false) }
-    }
-
-    suspend fun updateRoomDescription(gameId: String, roomId: String, description: String) {
-        roomRepository.updateRoomDescription(gameId, roomId, description)
-    }
-
-    suspend fun getAllGames(): List<GameStateDMO> {
-        return gameRepository.getAllGames()
-    }
-
-    suspend fun deleteGame(gameId: String) {
-        gameRepository.deleteGame(gameId)
-    }
-
-    suspend fun setRoomIsVisited(roomId: String, isVisited: Boolean) {
-        roomRepository.setRoomIsVisited(roomId, isVisited)
-    }
-
-    suspend fun setItemIsInInventory(itemId: String, isInInventory: Boolean) {
-        itemRepository.setItemIsInInventory(itemId, isInInventory)
-    }
-
     suspend fun getGameState(gameId: String): GameStateDMO {
         return gameRepository.getGameById(gameId)
-    }
-
-    suspend fun setCurrentRoom(gameId: String, currentRoomId: String) {
-        gameRepository.updateGameState(gameId, currentRoomId)
     }
 
     suspend fun getGameInventory(gameId: String): List<ItemDTO> {
@@ -118,5 +87,36 @@ class GameManagementUseCase(
             moves = moves,
             items = items
         )
+    }
+
+    suspend fun updateRoomDescription(gameId: String, roomId: String, description: String) {
+        roomRepository.updateRoomDescription(gameId, roomId, description)
+    }
+
+    suspend fun setRoomIsVisited(roomId: String, isVisited: Boolean) {
+        roomRepository.setRoomIsVisited(roomId, isVisited)
+    }
+
+    suspend fun setItemIsInInventory(itemId: String, isInInventory: Boolean) {
+        itemRepository.setItemIsInInventory(itemId, isInInventory)
+    }
+
+    suspend fun setCurrentRoom(gameId: String, currentRoomId: String) {
+        gameRepository.updateGameState(gameId, currentRoomId)
+    }
+
+    suspend fun resetGame(gameId: String) {
+        val rooms = roomRepository.getAllRoomsForGame(gameId)
+        val game = gameRepository.getGameById(gameId)
+        val items = itemRepository.getInventoryItemsForGame(gameId)
+
+        rooms.forEach { room -> setRoomIsVisited(room.id, false) }
+        rooms.forEach { room -> updateRoomDescription(gameId, room.id, room.initialDescription) }
+        setCurrentRoom(gameId, game.initialRoom)
+        items.forEach { item -> setItemIsInInventory(item.id, false) }
+    }
+
+    suspend fun deleteGame(gameId: String) {
+        gameRepository.deleteGame(gameId)
     }
 }

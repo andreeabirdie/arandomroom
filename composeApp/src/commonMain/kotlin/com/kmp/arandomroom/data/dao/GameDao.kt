@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.kmp.arandomroom.data.model.GameStateDMO
 
 @Dao
@@ -20,7 +19,7 @@ interface GameDao {
     suspend fun updateGameState(gameId: String, currentRoomId: String)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun createGame(game: GameStateDMO)
+    suspend fun insertGame(game: GameStateDMO)
 
     @Query("DELETE FROM games WHERE id = :gameId")
     suspend fun deleteGame(gameId: String)

@@ -71,7 +71,8 @@ class MenuViewModel(
                 validatedGame = validatedGame?.let { validateItems(it) }
 
                 if (validatedGame != null) {
-                    val generatedGame = Json.decodeFromString(GeneratedGame.serializer(), validatedGame)
+                    val generatedGame =
+                        Json.decodeFromString(GeneratedGame.serializer(), validatedGame)
                     Napier.d("Generated Game: $generatedGame")
                     gameManagementUseCase.insertGame(gameId, generatedGame)
                     _uiState.value = _uiState.value.copy(
@@ -91,6 +92,18 @@ class MenuViewModel(
         }
     }
 
+    private suspend fun addRules(prompt: String): String {
+        return "$prompt Rules: ${
+            getString(Res.string.move_description_rule)
+        } ${
+            getString(Res.string.describing_future_room)
+        } ${
+            getString(Res.string.enforce_items_rule)
+        } ${
+            getString(Res.string.unique_ids_rule)
+        }"
+    }
+
     private suspend fun validateMoves(generatedGame: String): String? {
         val prompt = getString(
             Res.string.validate_moves_prompt,
@@ -107,17 +120,5 @@ class MenuViewModel(
         )
 
         return generationUseCase.generateResponse(prompt)
-    }
-
-    private suspend fun addRules(prompt: String): String {
-        return "$prompt Rules: ${
-            getString(Res.string.move_description_rule)
-        } ${
-            getString(Res.string.describing_future_room)
-        } ${
-            getString(Res.string.enforce_items_rule)
-        } ${
-            getString(Res.string.unique_ids_rule)
-        }"
     }
 }

@@ -134,7 +134,8 @@ class RoomViewModel(
         )
 
         if (nextRoom.id == _uiState.value.endRoom) {
-            moveFeedback = moveFeedback.plus(" Congratulations! You have reached the end of the game.")
+            moveFeedback =
+                moveFeedback.plus(" Congratulations! You have reached the end of the game.")
         }
 
         _uiState.value = _uiState.value.copy(

@@ -12,5 +12,5 @@ interface MoveDao {
     suspend fun getMovesForRoom(gameId: String, roomId: String): List<MoveDMO>
 
     @Insert
-    suspend fun createMove(moveDMO: MoveDMO)
+    suspend fun insertMove(moveDMO: MoveDMO)
 }

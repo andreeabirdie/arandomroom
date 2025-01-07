@@ -63,7 +63,9 @@ fun LoadingSquaresAnimation(
     }
 
     Canvas(modifier = modifier.fillMaxWidth()) {
-        val startX = if (isCentered) { (size.width - 3 * initialSpacing ) / 2 } else 0f
+        val startX = if (isCentered) {
+            (size.width - 3 * initialSpacing) / 2
+        } else 0f
 
         drawRect(
             squareColor,

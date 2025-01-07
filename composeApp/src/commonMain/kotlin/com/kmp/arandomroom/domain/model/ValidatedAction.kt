@@ -11,7 +11,7 @@ data class ValidatedAction(
     val actionFeedback: String
 ) {
     companion object {
-        fun getSchema() : Schema<JsonObject> {
+        fun getSchema(): Schema<JsonObject> {
             return Schema(
                 name = "validatedAction",
                 description = "A validated action transformed from user input",
@@ -33,7 +33,7 @@ data class ValidatedAction(
             )
         }
 
-        fun getErrorMessage() : ValidatedAction {
+        fun getErrorMessage(): ValidatedAction {
             return ValidatedAction(null, "Something went wrong. Please try again.")
         }
     }

@@ -16,11 +16,11 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE gameId = :gameId and isInInventory = 1")
     suspend fun getInventoryItemsForGame(gameId: String): List<ItemDMO>
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertItem(item: ItemDMO)
+
     @Update
     suspend fun updateItem(item: ItemDMO)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun createItem(item: ItemDMO)
 
     @Query("UPDATE items SET isInInventory = :isInInventory WHERE id = :itemId")
     suspend fun setItemIsInInventory(itemId: String, isInInventory: Boolean)

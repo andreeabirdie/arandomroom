@@ -7,9 +7,8 @@ class MoveRepository(gameDatabase: GameDatabase) {
 
     private val moveDao = gameDatabase.getMoveDao()
 
-    suspend fun getMovesForRoom(gameId: String, roomId: String) : List<MoveDMO>{
-        return moveDao.getMovesForRoom(gameId, roomId)
-    }
+    suspend fun getMovesForRoom(gameId: String, roomId: String): List<MoveDMO> =
+        moveDao.getMovesForRoom(gameId, roomId)
 
-    suspend fun insertMove(moveDMO: MoveDMO) = moveDao.createMove(moveDMO)
+    suspend fun insertMove(moveDMO: MoveDMO) = moveDao.insertMove(moveDMO)
 }

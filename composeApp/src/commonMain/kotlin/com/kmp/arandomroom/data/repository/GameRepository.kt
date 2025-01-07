@@ -11,11 +11,10 @@ class GameRepository(gameDatabase: GameDatabase) {
 
     suspend fun getGameById(gameId: String): GameStateDMO = gameDao.getGameById(gameId)
 
-    suspend fun updateGameState(gameId: String, currentRoomId: String) {
-        gameDao.updateGameState(gameId, currentRoomId)
-    }
+    suspend fun insertGame(game: GameStateDMO) = gameDao.insertGame(game)
 
-    suspend fun insertGame(game: GameStateDMO) = gameDao.createGame(game)
+    suspend fun updateGameState(gameId: String, currentRoomId: String) =
+        gameDao.updateGameState(gameId, currentRoomId)
 
     suspend fun deleteGame(gameId: String) = gameDao.deleteGame(gameId)
 }

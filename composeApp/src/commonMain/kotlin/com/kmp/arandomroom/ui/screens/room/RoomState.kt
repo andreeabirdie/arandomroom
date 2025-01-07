@@ -12,7 +12,7 @@ data class RoomState(
     val actionFeedback: String
 ) {
     companion object {
-        fun getDefaultState() :RoomState {
+        fun getDefaultState(): RoomState {
             return RoomState(
                 gameId = "",
                 isLoading = true,

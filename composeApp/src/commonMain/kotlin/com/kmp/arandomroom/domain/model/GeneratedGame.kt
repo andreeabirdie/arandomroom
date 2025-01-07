@@ -13,7 +13,7 @@ data class GeneratedGame(
     val rooms: List<RoomDTO>
 ) {
     companion object {
-        fun getSchema() : Schema<JsonObject> {
+        fun getSchema(): Schema<JsonObject> {
             return Schema(
                 name = "generatedGame",
                 description = "A generated game",

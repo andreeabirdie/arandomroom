@@ -11,7 +11,6 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val dataModule = module {
-
     single<GameDatabase> { getRoomDatabase(get()) }
 
     singleOf(::GameRepository).bind(GameRepository::class)
