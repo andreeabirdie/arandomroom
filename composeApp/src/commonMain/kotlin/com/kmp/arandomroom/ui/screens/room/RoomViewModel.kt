@@ -36,7 +36,7 @@ class RoomViewModel(
             val gameState = gameManagementUseCase.getGameState(gameId)
             val inventory = gameManagementUseCase.getGameInventory(gameId)
             val currentRoom = gameManagementUseCase.getRoom(gameId, gameState.currentRoom)
-            gameManagementUseCase.getAllRooms(gameId)
+
             _uiState.value = _uiState.value.copy(
                 gameId = gameId,
                 isLoading = false,
@@ -62,7 +62,6 @@ class RoomViewModel(
                 _uiState.value.inventory.joinSerializedObjects(ItemDTO.serializer()),
             )
             Napier.d("prompt: $prompt")
-            val errorMessage = getString(Res.string.error_message)
             try {
                 val response = getActionUseCase.generateResponse(prompt)
                 if (response != null) {
@@ -72,7 +71,7 @@ class RoomViewModel(
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    actionFeedback = errorMessage
+                    actionFeedback = getString(Res.string.error_message)
                 )
             }
         }
@@ -106,9 +105,6 @@ class RoomViewModel(
             return
         }
 
-        currentRoom.items.forEach {
-            Napier.d("item: $it")
-        }
         currentRoom.items.firstOrNull { it.id == validatedAction.actionId }?.let { itemDTO ->
             performPickUp(itemDTO, feedback)
             return
@@ -180,7 +176,6 @@ class RoomViewModel(
 
         try {
             val response = updateRoomDescriptionUseCase.generateResponse(prompt)
-            Napier.d("response: $response")
             if (response != null) {
                 gameManagementUseCase.updateRoomDescription(
                     gameId = _uiState.value.gameId,

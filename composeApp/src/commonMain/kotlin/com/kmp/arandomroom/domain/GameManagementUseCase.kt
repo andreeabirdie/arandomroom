@@ -101,13 +101,6 @@ class GameManagementUseCase(
         return itemRepository.getInventoryItemsForGame(gameId).map { it.toDTO() }
     }
 
-    suspend fun getAllRooms(gameId: String) {
-        val rooms = roomRepository.getAllRoomsForGame(gameId)
-        rooms.forEach { room ->
-             Napier.d("room ${room.id}: ${getRoom(gameId, room.id)}")
-        }
-    }
-
     suspend fun getRoom(gameId: String, roomId: String): RoomDTO {
         val room = roomRepository.getRoom(roomId)
         val items = itemRepository.getAllItemsForRoom(

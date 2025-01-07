@@ -13,4 +13,6 @@
         Respond with the given structure.
     </string>
     <string name="update_description_prompt">The user has picked up the item %1$s from the room with description %2$s. Update the description such that it does not contain the item anymore. Keep everything else the same.</string>
+    <string name="validate_moves_prompt">Update generated game %1$s, such that for each room there is at least one move in the game that leads to that room. Also, update the moves such that for each move from room A to room B, there is a corresponding move from room B to room A in the opposite direction</string>
+    <string name="validate_items_prompt">Update the generated game %1$s, such that at least one move in the game has a requiredItem and add this item is in a reachable room. Also, add requiredItems and items otherwise described in the roomDescription which can be picked up are added as itemDTOs in the game structure.</string>
 </resources>

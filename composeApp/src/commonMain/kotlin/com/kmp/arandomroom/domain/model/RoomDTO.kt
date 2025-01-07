@@ -19,7 +19,7 @@ data class RoomDTO(
         fun getSchema(): Schema<JsonObject> {
             return Schema(
                 name = "room",
-                description = "A room in the game. Make sure there is at least one move in the game that leads to this room.",
+                description = "A room in the game.",
                 type = FunctionType.OBJECT,
                 properties = mapOf(
                     "id" to Schema(
@@ -55,7 +55,7 @@ data class RoomDTO(
                     ),
                     "items" to Schema(
                         name = "items",
-                        description = "List of items in the room. Make sure to add any items that can be picked up here. Add at least one item in each room",
+                        description = "List of items in the room that can be picked up by the user.",
                         type = FunctionType.ARRAY,
                         items = ItemDTO.getSchema(),
                         nullable = false

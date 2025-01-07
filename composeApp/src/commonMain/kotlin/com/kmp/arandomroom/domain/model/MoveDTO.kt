@@ -17,7 +17,7 @@ data class MoveDTO(
         fun getSchema(): Schema<JsonObject> {
             return Schema(
                 name = "move",
-                description = "A move made by the player. If I move west into a room then the room I moved into must have a move east into the room I came from.",
+                description = "A move made by the player. Make sure that for each move from room A to room B, there is a corresponding move from room B to room A in the opposite direction",
                 type = FunctionType.OBJECT,
                 properties = mapOf(
                     "id" to Schema(
@@ -28,7 +28,7 @@ data class MoveDTO(
                     ),
                     "direction" to Schema(
                         name = "direction",
-                        description = "Direction of the move",
+                        description = "Direction of the move. Has to be one of the following: north, east, south, west",
                         type = FunctionType.STRING,
                         nullable = false
                     ),
@@ -40,7 +40,7 @@ data class MoveDTO(
                     ),
                     "requiredItem" to Schema(
                         name = "requiredItem",
-                        description = "Item required to make the move or null if an item isn't needed. Can be for example a key to open a door. When adding a required item, make sure to also add the an item with the same id to a room in the game the user can reach.",
+                        description = "Item required to make the move or null if an item isn't needed. Can be for example a key to open a door.",
                         type = FunctionType.STRING,
                         nullable = true
                     )
