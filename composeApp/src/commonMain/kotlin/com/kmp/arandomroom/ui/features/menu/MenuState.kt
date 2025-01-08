@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.menu
+package com.kmp.arandomroom.ui.features.menu
 
 import com.kmp.arandomroom.data.model.GameStateDMO
 

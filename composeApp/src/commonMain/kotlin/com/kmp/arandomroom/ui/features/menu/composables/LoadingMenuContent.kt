@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.menu.composables
+package com.kmp.arandomroom.ui.features.menu.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,8 +22,8 @@ import arandomroom.composeapp.generated.resources.loading_game
 import arandomroom.composeapp.generated.resources.locking_chests
 import arandomroom.composeapp.generated.resources.placing_traps
 import arandomroom.composeapp.generated.resources.unveiling_mysteries
-import com.kmp.arandomroom.ui.screens.composables.AnimatedTextSwitcher
-import com.kmp.arandomroom.ui.screens.composables.LoadingSquaresAnimation
+import com.kmp.arandomroom.ui.features.composables.AnimatedTextSwitcher
+import com.kmp.arandomroom.ui.features.composables.LoadingSquaresAnimation
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

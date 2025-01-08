@@ -11,9 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.kmp.arandomroom.ui.screens.Routes
-import com.kmp.arandomroom.ui.screens.menu.MenuScreen
-import com.kmp.arandomroom.ui.screens.room.RoomScreen
+import com.kmp.arandomroom.ui.features.Routes
+import com.kmp.arandomroom.ui.features.menu.MenuScreen
+import com.kmp.arandomroom.ui.features.room.RoomScreen
 import com.kmp.arandomroom.ui.theme.AppTheme
 import org.koin.compose.KoinContext
 

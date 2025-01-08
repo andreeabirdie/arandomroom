@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.menu.composables
+package com.kmp.arandomroom.ui.features.menu.composables
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -31,12 +31,12 @@ import arandomroom.composeapp.generated.resources.game_generation_placeholder
 import arandomroom.composeapp.generated.resources.generate_new_game_title
 import arandomroom.composeapp.generated.resources.icon_logo
 import arandomroom.composeapp.generated.resources.play_existing_game_title
-import com.kmp.arandomroom.ui.screens.composables.PromptTextField
-import com.kmp.arandomroom.ui.screens.composables.fadingEdgeAnimateDpAsState
-import com.kmp.arandomroom.ui.screens.composables.leftFadingEdge
-import com.kmp.arandomroom.ui.screens.composables.rightFadingEdge
-import com.kmp.arandomroom.ui.screens.menu.MenuState
-import com.kmp.arandomroom.ui.screens.room.composables.AnimatedText
+import com.kmp.arandomroom.ui.features.composables.PromptTextField
+import com.kmp.arandomroom.ui.features.composables.fadingEdgeAnimateDpAsState
+import com.kmp.arandomroom.ui.features.composables.leftFadingEdge
+import com.kmp.arandomroom.ui.features.composables.rightFadingEdge
+import com.kmp.arandomroom.ui.features.menu.MenuState
+import com.kmp.arandomroom.ui.features.room.composables.AnimatedText
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

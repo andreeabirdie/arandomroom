@@ -123,14 +123,14 @@ buildkonfig {
         load(project.rootProject.file("local.properties").reader())
     }
     val apiKey: String = properties.getProperty("apiKey")
-    val baseUrl: String = properties.getProperty("baseUrl")
+    val model: String = properties.getProperty("model")
 
     require(apiKey.isNotEmpty()) {
-        "Register your api key from developer and place it in local.properties as `API_KEY`"
+        "Register your api key from developer and place it in local.properties as `apiKey`"
     }
 
-    require(baseUrl.isNotEmpty()) {
-        "Please add a base url in local.properties as `BASE_URL`"
+    require(model.isNotEmpty()) {
+        "Please pick a gemini model and place the name in in local.properties as `model`"
     }
 
     defaultConfigs {
@@ -141,8 +141,8 @@ buildkonfig {
         )
         buildConfigField(
             FieldSpec.Type.STRING,
-            "BASE_URL",
-            baseUrl
+            "MODEL_NAME",
+            model
         )
     }
 }

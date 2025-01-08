@@ -1,7 +1,7 @@
 package com.kmp.arandomroom.di
 
-import com.kmp.arandomroom.ui.screens.menu.MenuViewModel
-import com.kmp.arandomroom.ui.screens.room.RoomViewModel
+import com.kmp.arandomroom.ui.features.menu.MenuViewModel
+import com.kmp.arandomroom.ui.features.room.RoomViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

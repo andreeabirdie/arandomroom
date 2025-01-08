@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens
+package com.kmp.arandomroom.ui.features
 
 enum class Routes(val route: String) {
     Menu("Menu"),

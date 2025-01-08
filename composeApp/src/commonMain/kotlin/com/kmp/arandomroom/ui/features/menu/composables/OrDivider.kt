@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.menu.composables
+package com.kmp.arandomroom.ui.features.menu.composables
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

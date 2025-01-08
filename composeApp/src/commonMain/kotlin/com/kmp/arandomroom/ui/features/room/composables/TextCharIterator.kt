@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.room.composables
+package com.kmp.arandomroom.ui.features.room.composables
 
 class TextCharIterator(val text: String) : Iterator<Char> {
     private var currentIndex = -1

@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.room
+package com.kmp.arandomroom.ui.features.room
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

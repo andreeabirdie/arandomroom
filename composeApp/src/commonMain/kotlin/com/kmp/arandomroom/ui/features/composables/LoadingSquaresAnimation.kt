@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.composables
+package com.kmp.arandomroom.ui.features.composables
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween

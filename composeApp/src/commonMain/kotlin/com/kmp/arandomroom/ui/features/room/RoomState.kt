@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.room
+package com.kmp.arandomroom.ui.features.room
 
 import com.kmp.arandomroom.domain.model.ItemDTO
 import com.kmp.arandomroom.domain.model.RoomDTO

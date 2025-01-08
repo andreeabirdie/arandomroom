@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.composables
+package com.kmp.arandomroom.ui.features.composables
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.SpringSpec

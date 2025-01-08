@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.menu.composables
+package com.kmp.arandomroom.ui.features.menu.composables
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

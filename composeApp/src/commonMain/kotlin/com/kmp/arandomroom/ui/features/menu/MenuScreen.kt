@@ -1,12 +1,12 @@
-package com.kmp.arandomroom.ui.screens.menu
+package com.kmp.arandomroom.ui.features.menu
 
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.kmp.arandomroom.ui.screens.menu.composables.LoadingMenuContent
-import com.kmp.arandomroom.ui.screens.menu.composables.MenuContent
+import com.kmp.arandomroom.ui.features.menu.composables.LoadingMenuContent
+import com.kmp.arandomroom.ui.features.menu.composables.MenuContent
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

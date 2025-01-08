@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.room.composables
+package com.kmp.arandomroom.ui.features.composables
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -6,19 +6,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import arandomroom.composeapp.generated.resources.Res
-import arandomroom.composeapp.generated.resources.action_placeholder
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PromptTextField(
     isEnabled: Boolean,
-    inputText: MutableState<String>,
+    inputText: String,
+    onInputChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: String = stringResource(Res.string.action_placeholder)
+    placeholder: String = "Go east"
 ) {
     OutlinedTextField(
         modifier = modifier
@@ -30,9 +27,9 @@ fun PromptTextField(
         enabled = isEnabled,
         maxLines = 5,
         textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurface),
-        value = inputText.value,
+        value = inputText,
         shape = RoundedCornerShape(10.dp),
-        onValueChange = { inputText.value = it },
+        onValueChange = { onInputChanged(it) },
         placeholder = {
             Text(
                 text = placeholder,

@@ -1,4 +1,4 @@
-package com.kmp.arandomroom.ui.screens.room
+package com.kmp.arandomroom.ui.features.room
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
