@@ -25,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import arandomroom.composeapp.generated.resources.Res
 import arandomroom.composeapp.generated.resources.game_generation_placeholder
@@ -91,7 +92,10 @@ fun MenuContent(
                 enabled = prompt.isNotEmpty(),
                 onClick = onGenerate
             ) {
-                Text(text = stringResource(Res.string.generate_new_game_title))
+                Text(
+                    text = stringResource(Res.string.generate_new_game_title),
+                    textAlign = TextAlign.Center
+                )
             }
         }
 
