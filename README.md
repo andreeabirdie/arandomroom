@@ -8,7 +8,7 @@ Text-based games are one of the oldest versions of interactive fiction. In their
 
 ## Prerequisites
 
-You need a Mac with macOS to run iOS-specific code on simulated or real devices. You will also need [AndroidStudio](https://developer.android.com/studio), [XCode](https://developer.apple.com/xcode/), [JDK](https://www.oracle.com/java/technologies/downloads/?er=221886), [KMP plugin](https://kotlinlang.org/docs/multiplatform-plugin-releases.html) and [Kotlin plugin](https://kotlinlang.org/docs/releases.html#update-to-a-new-release). Please follow the [set up environment guide](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-create-first-app.html#set-up-the-environment) before cloning/forking the project.
+You need a Mac with macOS to run iOS-specific code on simulated or real devices. You will also need [AndroidStudio](https://developer.android.com/studio), [XCode](https://developer.apple.com/xcode/), [JDK](https://www.oracle.com/java/technologies/downloads/?er=221886), [KMP plugin](https://kotlinlang.org/docs/multiplatform-plugin-releases.html) and [Kotlin plugin](https://kotlinlang.org/docs/releases.html#update-to-a-new-release). Before downloading the project, please follow the [set up environment guide](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-create-first-app.html#set-up-the-environment).
 
 ## Set up a Gemini API key and pick a model model
 
@@ -19,7 +19,7 @@ apiKey=your-generated-api-key
 model=gemini-1.5-flash
 ```
 
-You are now ready to [follow the run the application guide for either Android or iOS](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-create-first-app.html#run-your-application)!
+You are now ready to [follow the run application guide for either Android or iOS](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-create-first-app.html#run-your-application)!
 
 # Built using
 
@@ -30,7 +30,7 @@ You are now ready to [follow the run the application guide for either Android or
    Declarative UI framework for building cross-platform apps in Kotlin.  
 
 3. **[Gemini SDK](https://github.com/PatilShreyas/generative-ai-kmp/tree/main)**  
-   SDK for building Gemini protocol-based applications for KMP. 
+   SDK for building Gemini protocol-based applications built for KMP. 
 
 4. **[Kotlinx-serialization](https://github.com/Kotlin/kotlinx.serialization)**  
    Multi-format reflectionless serialization
