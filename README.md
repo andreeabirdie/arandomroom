@@ -4,6 +4,10 @@ Text-based games are one of the oldest versions of interactive fiction. In their
 
 # Demo
 
+PS: unmute the video
+
+https://github.com/user-attachments/assets/5f9bbda8-8bca-439a-bff6-be49a944431a
+
 # How to run the project
 
 ## Prerequisites
