@@ -136,7 +136,10 @@ fun MenuContent(
                     rows = StaggeredGridCells.Adaptive(50.dp),
                     horizontalItemSpacing = 8.dp
                 ) {
-                    items(uiState.games) { game ->
+                    items(
+                        items = uiState.games,
+                        key = { it.id }
+                    ) { game ->
                         TitleGameButton(
                             game = game,
                             isLongPressed = selectedGame.value == game.id,
